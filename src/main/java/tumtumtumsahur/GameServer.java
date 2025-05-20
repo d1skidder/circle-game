@@ -162,7 +162,7 @@ public class GameServer extends WebSocketServer {
         ObjectNode resp = objectMapper.createObjectNode();
         resp.put("type", "players");
         resp.set("players", objectMapper.valueToTree(
-                players.values().stream().map(pl -> Map.of("id", pl.id, "x", pl.x, "y", pl.y)).toList()));
+                players.values().stream().map(pl -> Map.of("id", pl.id, "x", pl.x, "y", pl.y, "name", pl.name)).toList()));
 
         String msg = resp.toString();
         broadcast(msg);
