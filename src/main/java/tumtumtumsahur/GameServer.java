@@ -28,7 +28,6 @@ public class GameServer extends WebSocketServer {
             this.id = id;
             this.x = x;
             this.y = y;
-            this.dir = 0;
         }
     }
 
@@ -61,7 +60,7 @@ public class GameServer extends WebSocketServer {
     @Override
     public void onOpen(WebSocket ws, ClientHandshake hnsk) {
         String playerID = UUID.randomUUID().toString();
-        players.put(ws, new Player(playerID, Math.random() * 100, Math.random() * 100));
+        players.put(ws, new Player(playerID, 0, 0));
 
         // tell res tof clients new player spawned
         ObjectNode response = objectMapper.createObjectNode();
