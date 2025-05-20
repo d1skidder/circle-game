@@ -22,7 +22,6 @@ public class GameServer extends WebSocketServer {
         String id;
         double x;
         double y;
-        double dir;
 
         // woah weird ass constructor methods
         Player(String id, double x, double y) {
@@ -53,6 +52,7 @@ public class GameServer extends WebSocketServer {
         gameLoopInterval.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
+                System.out.println("UPDATE RUN — NO MOVEMENT");
                 gameLoop();
             }
         }, 0, 100);
@@ -69,6 +69,17 @@ public class GameServer extends WebSocketServer {
         response.put("id", playerID);
         ws.send(response.toString());
     }
+    private void handleMovement(WebSocket ws, JsonNode jsonNode) {
+        double dir = jsonNode.get("dir").asDouble(); // direction in radians
+        Player player = players.get(ws);
+
+        if (player != null) {
+            double distance = 20;
+            player.x += distance * Math.cos(dir);
+            player.y += distance * Math.sin(dir);
+        }
+    }
+
 
     @Override
     public void onMessage(WebSocket ws, String msg) {
@@ -83,7 +94,7 @@ public class GameServer extends WebSocketServer {
                     break;
 
                 case "move":
-                    handleDirectionChange(ws, jsonNode);
+                    handleMovement(ws, jsonNode);
                     break;
 
                 default:
@@ -112,17 +123,6 @@ public class GameServer extends WebSocketServer {
         // shouldnt be too big of a deal
         String msg = "{\"type\": \"ping\"}";
         ws.send(msg);
-    }
-
-    private void handleDirectionChange(WebSocket ws, JsonNode jsonNode) {
-        double dir = jsonNode.get("dir").asDouble();
-        Player player = players.get(ws);
-
-        if (player != null) {
-            double distance = 20; // move 20 units per packet
-            player.x += distance * Math.cos(dir);
-            player.y += distance * Math.sin(dir);
-        }
     }
 
     // juicy update logic ahead!!!
