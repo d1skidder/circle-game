@@ -51,7 +51,7 @@ public class GameServer extends WebSocketServer {
         gameLoopInterval.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                System.out.println("UPDATE RUN — NO MOVEMENT");
+                //System.out.println("UPDATE RUN — NO MOVEMENT");
                 gameLoop();
             }
         }, 0, 100);
@@ -95,7 +95,7 @@ public class GameServer extends WebSocketServer {
                     break;
 
                 case "move":
-                    //handleMovement(ws, jsonNode);
+                    handleMovement(ws, jsonNode);
                     break;
 
                 default:
