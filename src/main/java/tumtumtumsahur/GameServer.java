@@ -116,6 +116,13 @@ public class GameServer extends WebSocketServer {
 
     private void handleDirectionChange(WebSocket ws, JsonNode jsonNode) {
         double dir = jsonNode.get("dir").asDouble();
+        Player player = players.get(ws);
+
+        if (player != null) {
+            double distance = 20; // move 20 units per packet
+            player.x += distance * Math.cos(dir);
+            player.y += distance * Math.sin(dir);
+        }
     }
 
     // juicy update logic ahead!!!
