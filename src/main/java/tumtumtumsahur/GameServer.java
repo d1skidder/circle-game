@@ -157,5 +157,6 @@ public class GameServer extends WebSocketServer {
         server.start();
 
         System.out.println("ws server running on ws://localhost:something!!!!!");
+        System.out.println("working");
     }
 }
