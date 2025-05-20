@@ -70,6 +70,7 @@ public class GameServer extends WebSocketServer {
         ws.send(response.toString());
     }
     private void handleMovement(WebSocket ws, JsonNode jsonNode) {
+        /*
         double dir = jsonNode.get("dir").asDouble(); // direction in radians
         Player player = players.get(ws);
 
@@ -78,6 +79,7 @@ public class GameServer extends WebSocketServer {
             player.x += distance * Math.cos(dir);
             player.y += distance * Math.sin(dir);
         }
+        */
     }
 
 
