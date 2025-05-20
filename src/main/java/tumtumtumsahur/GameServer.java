@@ -132,6 +132,7 @@ public class GameServer extends WebSocketServer {
     }
 
     private void update() {
+        /*
         int playerSpeed = 200;
 
         for (Player player : players.values()) {
@@ -139,6 +140,7 @@ public class GameServer extends WebSocketServer {
             player.x += 200 * Math.cos(player.dir);
             player.y += 200 * Math.sin(player.dir);
         }
+        */
     }
 
     private void broadcastData() {
