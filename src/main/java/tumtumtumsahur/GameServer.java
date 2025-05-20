@@ -35,6 +35,10 @@ public class GameServer extends WebSocketServer {
             this.id = id;
             this.x = x;
             this.y = y;
+            this.x_vel = 0;
+            this.y_vel = 0;
+            this.x_accel = 0;
+            this.y_accel = 0;
         }
     }
 
@@ -76,20 +80,36 @@ public class GameServer extends WebSocketServer {
         ws.send(response.toString());
     }
     private void handleMovement(WebSocket ws, JsonNode jsonNode) {
-        
         double dir = jsonNode.get("dir").asDouble(); // direction in radians
         Player player = players.get(ws);
 
         if (player != null) {
-            double distance = 20;
-            player.x += distance * Math.cos(dir);
-            player.y += distance * Math.sin(dir);
+            double accel = 0.5; 
+            player.x_accel += accel * Math.cos(dir);
+            player.y_accel += accel * Math.sin(dir);
         }
-        
+    }    
+    private void updatePosition(Player p) {
+        double friction = 0.9;
+        double maxSpeed = 6.0;
+        p.x_vel += p.x_accel;
+        p.y_vel += p.y_accel;
+        double speed = Math.hypot(p.x_vel, p.y_vel);
+        if (speed > maxSpeed) {
+            double scale = maxSpeed / speed;
+            p.x_vel *= scale;
+            p.y_vel *= scale;
+        }
+        p.x += p.x_vel;
+        p.y += p.y_vel;
+        p.x_vel *= friction;
+        p.y_vel *= friction;
+        p.x_accel = 0;
+        p.y_accel = 0;
     }
 
 
-    @Override
+    @Override    
     public void onMessage(WebSocket ws, String msg) {
         try {
             JsonNode jsonNode = objectMapper.readTree(msg); // what da hell is this
@@ -147,15 +167,9 @@ public class GameServer extends WebSocketServer {
     }
 
     private void update() {
-        /*
-        int playerSpeed = 200;
-
-        for (Player player : players.values()) {
-            // no velocity bs right now
-            player.x += 200 * Math.cos(player.dir);
-            player.y += 200 * Math.sin(player.dir);
+        for (Player p : players.values()) {
+            updatePosition(p);
         }
-        */
     }
 
     private void broadcastData() {
