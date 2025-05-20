@@ -95,7 +95,7 @@ public class GameServer extends WebSocketServer {
                     break;
 
                 case "move":
-                    handleMovement(ws, jsonNode);
+                    //handleMovement(ws, jsonNode);
                     break;
 
                 default:
