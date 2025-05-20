@@ -18,13 +18,20 @@ public class GameServer extends WebSocketServer {
     private final Map<WebSocket, Player> players;
     private final Timer gameLoopInterval;
 
-    private static class Player {
+    private static class Player {    
+        String name;
         String id;
         double x;
         double y;
+        double x_vel;
+        double y_vel;
+        double x_accel;
+        double y_accel;
+        
 
         // woah weird ass constructor methods
         Player(String id, double x, double y) {
+            this.name = "unknown";
             this.id = id;
             this.x = x;
             this.y = y;
