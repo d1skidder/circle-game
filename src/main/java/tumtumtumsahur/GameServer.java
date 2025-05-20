@@ -30,8 +30,8 @@ public class GameServer extends WebSocketServer {
         
 
         // woah weird ass constructor methods
-        Player(String id, double x, double y) {
-            this.name = "unknown";
+        Player(String id, String name, double x, double y) {
+            this.name = name;
             this.id = id;
             this.x = x;
             this.y = y;
@@ -67,7 +67,7 @@ public class GameServer extends WebSocketServer {
     @Override
     public void onOpen(WebSocket ws, ClientHandshake hnsk) {
         String playerID = UUID.randomUUID().toString();
-        players.put(ws, new Player(playerID, 0, 0));
+        players.put(ws, new Player(playerID,"hi", 0, 0));
 
         // tell res tof clients new player spawned
         ObjectNode response = objectMapper.createObjectNode();
