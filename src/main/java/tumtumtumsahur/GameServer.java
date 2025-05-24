@@ -80,9 +80,10 @@ public class GameServer extends WebSocketServer {
         ws.send(response.toString());
     }
     private void handleMovement(WebSocket ws, JsonNode jsonNode) {
+        if (jsonNode.get("dir") == null || jsonNode.get("dir").isNull()) return;
         double dir = jsonNode.get("dir").asDouble(); // direction in radians
         Player player = players.get(ws);
-
+        
         if (player != null) {
             double accel = 0.5; 
             player.x_accel += accel * Math.cos(dir);
