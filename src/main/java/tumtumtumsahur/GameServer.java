@@ -89,7 +89,7 @@
             Player player = players.get(ws);
             
             if (player != null) {
-                double accel = 0.5; 
+                double accel = 1; 
                 player.x_accel += accel * Math.cos(dir);
                 player.y_accel += accel * Math.sin(dir);
             }
