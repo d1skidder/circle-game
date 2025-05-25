@@ -1,29 +1,29 @@
 package tumtumtumsahur;
 
 import java.net.InetSocketAddress;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.UUID;
+
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class GameServer extends WebSocketServer {
     private final ObjectMapper objectMapper;
     private final Map<WebSocket, Player> players;
+    private final Set<Projectile> projectiles;
     private final Timer gameLoopInterval;
 
 
     public GameServer() {
-        super(new InetSocketAddress("0.0.0.0", getEnvPort()));
-        //super(new InetSocketAddress("localhost", 8080));
+        //super(new InetSocketAddress("0.0.0.0", getEnvPort()));
+        super(new InetSocketAddress("localhost", 8080));
         this.objectMapper = new ObjectMapper();
         this.players = new HashMap<>();
+        this.projectiles = Collections.newSetFromMap(new ConcurrentHashMap<>());
         this.gameLoopInterval = new Timer(true);
     }
 
@@ -65,10 +65,23 @@ public class GameServer extends WebSocketServer {
         double y = jsonNode.get("y").asDouble(); // y component
         Player player = players.get(ws);
         if (player != null) {
-            player.x_vel = x*player.max_vel;
-            player.y_vel = y*player.max_vel;
+            player.updateVelocity(x, y);
         }
-    }    
+    }  
+    
+    private void createProjectile(WebSocket ws, JsonNode jsonNode) {
+        if (jsonNode.get("x") == null || jsonNode.get("x").isNull()) return;
+        if (jsonNode.get("y") == null || jsonNode.get("y").isNull()) return;
+        double x = jsonNode.get("x").asDouble(); // x component
+        double y = jsonNode.get("y").asDouble(); // y component
+        String projectileId = UUID.randomUUID().toString();
+        Player player = players.get(ws);
+        x -= player.x;
+        y -= player.y;
+        if (player != null) {
+            projectiles.add(new Projectile(projectileId, player.x, player.y, x, y));
+        }
+    }
 
 
     @Override    
@@ -85,6 +98,10 @@ public class GameServer extends WebSocketServer {
 
                 case "move":
                     handleMovement(ws, jsonNode);
+                    break;
+
+                case "fireball":
+                    createProjectile(ws, jsonNode);
                     break;
 
                 default:
@@ -122,7 +139,8 @@ public class GameServer extends WebSocketServer {
 
         try {
             update();
-            broadcastData();
+            broadcastPlayerData();
+            broadcastProjectileData();
         } catch (Exception e) {
             System.out.println("booo err " + e);
         }
@@ -132,13 +150,30 @@ public class GameServer extends WebSocketServer {
         for (Player p : players.values()) {
             p.updatePosition();
         }
+        for (Projectile p : projectiles) {
+            p.updatePosition();
+            p.time--;
+            if (p.time == 0) {
+                projectiles.remove(p);
+            }
+        }
     }
 
-    private void broadcastData() {
+    private void broadcastPlayerData() {
         ObjectNode resp = objectMapper.createObjectNode();
         resp.put("type", "players");
         resp.set("players", objectMapper.valueToTree(
                 players.values().stream().map(pl -> Map.of("id", pl.id, "x", pl.x, "y", pl.y, "name", pl.name,"last_x", pl.last_x, "last_y",pl.last_y)).toList()));
+
+        String msg = resp.toString();
+        broadcast(msg);
+    }
+
+    private void broadcastProjectileData() {
+        ObjectNode resp = objectMapper.createObjectNode();
+        resp.put("type", "projectiles");
+        resp.set("projectiles", objectMapper.valueToTree(
+                projectiles.stream().map(pr -> Map.of("id", pr.id, "x", pr.x, "y", pr.y, "last_x", pr.last_x, "last_y",pr.last_y)).toList()));
 
         String msg = resp.toString();
         broadcast(msg);

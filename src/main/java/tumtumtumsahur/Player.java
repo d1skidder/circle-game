@@ -17,7 +17,6 @@ public class Player extends Circle {
         last_y = y;
         x += x_vel;
         y += y_vel;
-        x_vel = 0;
-        y_vel = 0;
+        System.out.println(x_vel + " " + y_vel);
     }
 }

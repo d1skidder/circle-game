@@ -29,4 +29,19 @@ public class Circle {
         }
         return false;
     }
+
+    public void updateVelocity (double x, double y) {
+        double magnitude = Math.hypot(x, y);
+        if (magnitude != 0) {
+            x /= magnitude; y /= magnitude;
+        }
+        x_vel = x*max_vel; y_vel = y*max_vel;
+    }
+
+    public void updatePosition() {
+        last_x = x;
+        last_y = y;
+        x += x_vel;
+        y += y_vel;
+    }
 }
