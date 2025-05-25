@@ -74,14 +74,21 @@
     
         @Override
         public void onOpen(WebSocket ws, ClientHandshake hnsk) {
+    // Just wait for "join" packet from client
+            System.out.println("Connection opened. Awaiting join info...");
+        }
+        private void handleJoin(WebSocket ws, JsonNode jsonNode) {
+            String name = jsonNode.has("name") ? jsonNode.get("name").asText() : "unnamed";
             String playerID = UUID.randomUUID().toString();
-            players.put(ws, new Player(playerID,"hi", 0, 0));
-    
-            // tell res tof clients new player spawned
+            Player player = new Player(playerID, name, 0, 0);
+            players.put(ws, player);
+
             ObjectNode response = objectMapper.createObjectNode();
             response.put("type", "init");
             response.put("id", playerID);
             ws.send(response.toString());
+
+            System.out.println("Player joined: " + name + " (" + playerID + ")");
         }
         private void handleMovement(WebSocket ws, JsonNode jsonNode) {
             if (jsonNode.get("dir") == null || jsonNode.get("dir").isNull()) return;
@@ -124,6 +131,9 @@
     
                 // wtf this is just js on steroids
                 switch (type) {
+                    case "join":
+                        handleJoin(ws, jsonNode);
+                        break;
                     case "ping":
                         handlePingMessage(ws, jsonNode);
                         break;
