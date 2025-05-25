@@ -19,8 +19,8 @@ public class GameServer extends WebSocketServer {
 
 
     public GameServer() {
-        //super(new InetSocketAddress("0.0.0.0", getEnvPort()));
-        super(new InetSocketAddress("localhost", 8080));
+        super(new InetSocketAddress("0.0.0.0", getEnvPort()));
+        //super(new InetSocketAddress("localhost", 8080));
         this.objectMapper = new ObjectMapper();
         this.players = new HashMap<>();
         this.projectiles = Collections.newSetFromMap(new ConcurrentHashMap<>());
@@ -79,7 +79,21 @@ public class GameServer extends WebSocketServer {
         x -= player.x;
         y -= player.y;
         if (player != null) {
-            projectiles.add(new Projectile(projectileId, player.x, player.y, x, y));
+            projectiles.add(new Projectile(projectileId, player.x, player.y, x, y, player.id));
+        }
+    }
+
+    private void projectileCollisions(WebSocket ws) {
+        Player pl = players.get(ws);
+        for (Projectile proj : projectiles) {
+            if (!proj.hitPlayers.contains(pl.id) && pl.collision(proj)) {
+                pl.health -= proj.damage;
+                proj.hitPlayers.add(pl.id);
+                if (pl.health <= 0.0) {
+                    players.remove(ws);
+                    return;
+                }
+            }
         }
     }
 
@@ -147,9 +161,6 @@ public class GameServer extends WebSocketServer {
     }
 
     private void update() {
-        for (Player p : players.values()) {
-            p.updatePosition();
-        }
         for (Projectile p : projectiles) {
             p.updatePosition();
             p.time--;
@@ -157,14 +168,17 @@ public class GameServer extends WebSocketServer {
                 projectiles.remove(p);
             }
         }
+        for (WebSocket ws : players.keySet()) {
+            players.get(ws).updatePosition();
+            projectileCollisions(ws);
+        }
     }
 
     private void broadcastPlayerData() {
         ObjectNode resp = objectMapper.createObjectNode();
         resp.put("type", "players");
         resp.set("players", objectMapper.valueToTree(
-                players.values().stream().map(pl -> Map.of("id", pl.id, "x", pl.x, "y", pl.y, "name", pl.name,"last_x", pl.last_x, "last_y",pl.last_y)).toList()));
-
+                players.values().stream().map(pl -> Map.of("id", pl.id, "x", pl.x, "y", pl.y, "name", pl.name,"last_x", pl.last_x, "last_y",pl.last_y, "health", pl.health)).toList()));
         String msg = resp.toString();
         broadcast(msg);
     }

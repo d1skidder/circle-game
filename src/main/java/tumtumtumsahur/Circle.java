@@ -9,7 +9,7 @@ public class Circle {
     double x_vel;
     double y_vel;
     double max_vel;
-    static double radius;
+    double radius;
     
 
     // woah weird ass constructor methods
@@ -24,7 +24,7 @@ public class Circle {
     }
 
     public boolean collision (Circle ref) {
-        if ((ref.x-x)*(ref.x-x)+(ref.y-y)*(ref.y-y) <= radius*radius) {
+        if (Math.hypot(ref.x-x,ref.y-y) <= radius+ref.radius) {
             return true;
         }
         return false;
