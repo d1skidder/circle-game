@@ -27,9 +27,7 @@ public class GameServer extends WebSocketServer {
         double y;
         double x_vel;
         double y_vel;
-        double x_accel;
-        double y_accel;
-        double friction = 0.5;
+        double max_vel = 10.0;
         
 
         // woah weird ass constructor methods
@@ -42,8 +40,6 @@ public class GameServer extends WebSocketServer {
             this.y = y;
             this.x_vel = 0;
             this.y_vel = 0;
-            this.x_accel = 0;
-            this.y_accel = 0;
         }
     }
 
@@ -88,46 +84,18 @@ public class GameServer extends WebSocketServer {
         if (jsonNode.get("dir") == null || jsonNode.get("dir").isNull()) return;
         double dir = jsonNode.get("dir").asDouble(); // direction in radians
         Player player = players.get(ws);
-        
         if (player != null) {
-            double accel = 1; 
-            double x_comp = Math.cos(dir); double y_comp = Math.sin(dir);
-            player.x_accel += accel * x_comp;
-            player.y_accel += accel * y_comp;
+            player.x_vel = player.max_vel*Math.cos(dir);
+            player.y_vel = player.max_vel*Math.sin(dir);
         }
     }    
     private void updatePosition(Player p) {
         p.last_x = p.x;
         p.last_y = p.y;
-        double maxSpeed = 6.0;
-        p.x_vel += p.x_accel;
-        p.y_vel += p.y_accel;
-        double speed = Math.hypot(p.x_vel, p.y_vel);
-        if (speed > maxSpeed) {
-            double scale = maxSpeed / speed;
-            p.x_vel *= scale;
-            p.y_vel *= scale;
-        }
         p.x += p.x_vel;
         p.y += p.y_vel;
-
-        //handle friction
-        if (p.x_vel > 0) {
-            p.x_vel = Math.max(0.0, p.x_vel-p.friction*(Math.abs(p.x_vel)/speed));
-        }
-        if (p.x_vel < 0) {
-            p.x_vel = Math.min(0.0, p.x_vel+p.friction*(Math.abs(p.x_vel)/speed));
-        }
-        if (p.y_vel > 0) {
-            p.y_vel = Math.max(0.0, p.y_vel-p.friction*(Math.abs(p.y_vel)/speed));
-        }
-        if (p.y_vel < 0) {
-            p.y_vel = Math.min(0.0, p.y_vel+p.friction*(Math.abs(p.y_vel)/speed));
-        }
-
-        //reset accel
-        p.x_accel = 0;
-        p.y_accel = 0;
+        p.x_vel = 0;
+        p.y_vel = 0;
     }
 
 
