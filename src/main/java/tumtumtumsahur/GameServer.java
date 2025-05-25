@@ -29,7 +29,7 @@ public class GameServer extends WebSocketServer {
         double y_vel;
         double x_accel;
         double y_accel;
-        double friction = 0.6;
+        double friction = 0.5;
         
 
         // woah weird ass constructor methods
@@ -116,10 +116,10 @@ public class GameServer extends WebSocketServer {
             p.x_vel = Math.max(0.0, p.x_vel-p.friction*(p.x_vel/speed));
         }
         if (p.x_vel < 0) {
-            p.x_vel = Math.min(0.0, p.x_vel+p.friction*(p.x_vel/speed));
+            p.x_vel = Math.min(0.0, p.x_vel+p.friction*(Math.abs(p.x_vel)/speed));
         }
         if (p.y_vel > 0) {
-            p.y_vel = Math.max(0.0, p.y_vel-p.friction*(p.y_vel/speed));
+            p.y_vel = Math.max(0.0, p.y_vel-p.friction*(Math.abs(p.y_vel)/speed));
         }
         if (p.y_vel < 0) {
             p.y_vel = Math.min(0.0, p.y_vel+p.friction*(p.y_vel/speed));
