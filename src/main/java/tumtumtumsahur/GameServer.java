@@ -113,7 +113,7 @@ public class GameServer extends WebSocketServer {
 
         //handle friction
         if (p.x_vel > 0) {
-            p.x_vel = Math.max(0.0, p.x_vel-p.friction*(p.x_vel/speed));
+            p.x_vel = Math.max(0.0, p.x_vel-p.friction*(Math.abs(p.x_vel)/speed));
         }
         if (p.x_vel < 0) {
             p.x_vel = Math.min(0.0, p.x_vel+p.friction*(Math.abs(p.x_vel)/speed));
@@ -122,7 +122,7 @@ public class GameServer extends WebSocketServer {
             p.y_vel = Math.max(0.0, p.y_vel-p.friction*(Math.abs(p.y_vel)/speed));
         }
         if (p.y_vel < 0) {
-            p.y_vel = Math.min(0.0, p.y_vel+p.friction*(p.y_vel/speed));
+            p.y_vel = Math.min(0.0, p.y_vel+p.friction*(Math.abs(p.y_vel)/speed));
         }
 
         //reset accel
