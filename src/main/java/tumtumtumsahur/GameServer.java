@@ -1,5 +1,5 @@
 package tumtumtumsahur;
-    
+
 import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.HashMap;
@@ -18,33 +18,10 @@ public class GameServer extends WebSocketServer {
     private final Map<WebSocket, Player> players;
     private final Timer gameLoopInterval;
 
-    private static class Player {    
-        String name;
-        String id;
-        double last_x;
-        double last_y;
-        double x;
-        double y;
-        double x_vel;
-        double y_vel;
-        double max_vel = 10.0;
-        
-
-        // woah weird ass constructor methods
-        Player(String id, String name, double x, double y) {
-            this.name = name;
-            this.id = id;
-            this.last_x = x;
-            this.last_y = y;
-            this.x = x;
-            this.y = y;
-            this.x_vel = 0;
-            this.y_vel = 0;
-        }
-    }
 
     public GameServer() {
         super(new InetSocketAddress("0.0.0.0", getEnvPort()));
+        //super(new InetSocketAddress("localhost", 8080));
         this.objectMapper = new ObjectMapper();
         this.players = new HashMap<>();
         this.gameLoopInterval = new Timer(true);
@@ -80,23 +57,18 @@ public class GameServer extends WebSocketServer {
         response.put("id", playerID);
         ws.send(response.toString());
     }
+
     private void handleMovement(WebSocket ws, JsonNode jsonNode) {
-        if (jsonNode.get("dir") == null || jsonNode.get("dir").isNull()) return;
-        double dir = jsonNode.get("dir").asDouble(); // direction in radians
+        if (jsonNode.get("x") == null || jsonNode.get("x").isNull()) return;
+        if (jsonNode.get("y") == null || jsonNode.get("y").isNull()) return;
+        double x = jsonNode.get("x").asDouble(); // x component
+        double y = jsonNode.get("y").asDouble(); // y component
         Player player = players.get(ws);
         if (player != null) {
-            player.x_vel = player.max_vel*Math.cos(dir);
-            player.y_vel = player.max_vel*Math.sin(dir);
+            player.x_vel = x*player.max_vel;
+            player.y_vel = y*player.max_vel;
         }
     }    
-    private void updatePosition(Player p) {
-        p.last_x = p.x;
-        p.last_y = p.y;
-        p.x += p.x_vel;
-        p.y += p.y_vel;
-        p.x_vel = 0;
-        p.y_vel = 0;
-    }
 
 
     @Override    
@@ -158,7 +130,7 @@ public class GameServer extends WebSocketServer {
 
     private void update() {
         for (Player p : players.values()) {
-            updatePosition(p);
+            p.updatePosition();
         }
     }
 
@@ -177,7 +149,7 @@ public class GameServer extends WebSocketServer {
         GameServer server = new GameServer();
         server.start();
 
-        System.out.println("ws server running on ws://localhost:something!!!!!");
+        System.out.println("ws server running on ws://localhost:{port}");
         System.out.println("working");
     }
 }
