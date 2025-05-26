@@ -9,6 +9,8 @@ public abstract class Player extends Circle {
     public double health_regen;
     public double last_dir;
     public double dir;
+    public double timeFromLastHit;
+    public boolean isHitting = false;
 
     public int skill1cd = 0;
     public int basicMeleeCD = 0;
