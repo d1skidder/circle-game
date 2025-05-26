@@ -1,15 +1,15 @@
-package tumtumtumsahur;
+package arcane;
 
 public class Circle {    
-    String id;
+    public String id;
     double last_x;
     double last_y;
-    double x;
-    double y;
-    double x_vel;
-    double y_vel;
-    double max_vel;
-    double radius;
+    public double x;
+    public double y;
+    public double x_vel;
+    public double y_vel;
+    public double max_vel;
+    public double radius;
     
 
     // woah weird ass constructor methods
@@ -38,7 +38,7 @@ public class Circle {
         x_vel = x*max_vel; y_vel = y*max_vel;
     }
 
-    public void updatePosition() {
+    public void update() {
         last_x = x;
         last_y = y;
         x += x_vel;

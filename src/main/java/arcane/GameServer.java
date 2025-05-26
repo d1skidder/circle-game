@@ -1,4 +1,4 @@
-package tumtumtumsahur;
+package arcane;
 
 import java.net.InetSocketAddress;
 
@@ -11,6 +11,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import arcane.Classes.*;
+import arcane.Projectiles.*;
+
 public class GameServer extends WebSocketServer {
     private final ObjectMapper objectMapper;
     private final Map<WebSocket, Player> players;
@@ -19,8 +22,8 @@ public class GameServer extends WebSocketServer {
 
 
     public GameServer() {
-        super(new InetSocketAddress("0.0.0.0", getEnvPort()));
-        //super(new InetSocketAddress("localhost", 8080));
+        //super(new InetSocketAddress("0.0.0.0", getEnvPort()));
+        super(new InetSocketAddress("localhost", 8080));
         this.objectMapper = new ObjectMapper();
         this.players = new HashMap<>();
         this.projectiles = Collections.newSetFromMap(new ConcurrentHashMap<>());
@@ -49,7 +52,8 @@ public class GameServer extends WebSocketServer {
     @Override
     public void onOpen(WebSocket ws, ClientHandshake hnsk) {
         String playerID = UUID.randomUUID().toString();
-        players.put(ws, new Player(playerID,"hi", 0, 0));
+        System.out.println("Player: " + playerID + " has joined the game");
+        players.put(ws, new Fire1(playerID,"hi", 0, 0));
 
         // tell res tof clients new player spawned
         ObjectNode response = objectMapper.createObjectNode();
@@ -74,12 +78,12 @@ public class GameServer extends WebSocketServer {
         if (jsonNode.get("y") == null || jsonNode.get("y").isNull()) return;
         double x = jsonNode.get("x").asDouble(); // x component
         double y = jsonNode.get("y").asDouble(); // y component
-        String projectileId = UUID.randomUUID().toString();
         Player player = players.get(ws);
-        x -= player.x;
-        y -= player.y;
         if (player != null) {
-            projectiles.add(new Projectile(projectileId, player.x, player.y, x, y, player.id));
+            Projectile newproj = player.skill_1(x, y);
+            if (newproj != null) {
+                projectiles.add(newproj);
+            }
         }
     }
 
@@ -114,7 +118,7 @@ public class GameServer extends WebSocketServer {
                     handleMovement(ws, jsonNode);
                     break;
 
-                case "fireball":
+                case "skill":
                     createProjectile(ws, jsonNode);
                     break;
 
@@ -162,14 +166,13 @@ public class GameServer extends WebSocketServer {
 
     private void update() {
         for (Projectile p : projectiles) {
-            p.updatePosition();
-            p.time--;
+            p.update();
             if (p.time == 0) {
                 projectiles.remove(p);
             }
         }
         for (WebSocket ws : players.keySet()) {
-            players.get(ws).updatePosition();
+            players.get(ws).update();
             projectileCollisions(ws);
         }
     }
@@ -178,7 +181,8 @@ public class GameServer extends WebSocketServer {
         ObjectNode resp = objectMapper.createObjectNode();
         resp.put("type", "players");
         resp.set("players", objectMapper.valueToTree(
-                players.values().stream().map(pl -> Map.of("id", pl.id, "x", pl.x, "y", pl.y, "name", pl.name,"last_x", pl.last_x, "last_y",pl.last_y, "health", pl.health)).toList()));
+                players.values().stream().map(pl -> Map.of("id", pl.id, "x", pl.x, "y", pl.y, "name", pl.name,"last_x",
+                 pl.last_x, "last_y",pl.last_y, "health", pl.health, "mana", pl.mana)).toList()));
         String msg = resp.toString();
         broadcast(msg);
     }
@@ -187,7 +191,8 @@ public class GameServer extends WebSocketServer {
         ObjectNode resp = objectMapper.createObjectNode();
         resp.put("type", "projectiles");
         resp.set("projectiles", objectMapper.valueToTree(
-                projectiles.stream().map(pr -> Map.of("id", pr.id, "x", pr.x, "y", pr.y, "last_x", pr.last_x, "last_y",pr.last_y)).toList()));
+                projectiles.stream().map(pr -> Map.of("id", pr.id, "x", pr.x, "y", pr.y, "last_x", pr.last_x, "last_y",pr.last_y,
+                "radius", pr.radius)).toList()));
 
         String msg = resp.toString();
         broadcast(msg);

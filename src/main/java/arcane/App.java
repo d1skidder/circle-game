@@ -1,4 +1,4 @@
-package tumtumtumsahur;
+package arcane;
 
 /**
  * Hello world!
