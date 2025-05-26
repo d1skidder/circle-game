@@ -96,6 +96,10 @@ public class GameServer extends WebSocketServer {
         double dir = jsonNode.get("dir").asDouble(); // mouse direction
         Player pl = players.get(ws);
         Sweep swp = pl.basicMelee(dir);
+        if(pl.isHitting == false) {
+            pl.isHitting = true;
+            pl.timeFromLastHit = jsonNode.get("time").asDouble();
+        }
         if (swp != null) {
             for (WebSocket oppws : players.keySet()) {
                 Player opp = players.get(oppws);
@@ -210,8 +214,23 @@ public class GameServer extends WebSocketServer {
         ObjectNode resp = objectMapper.createObjectNode();
         resp.put("type", "players");
         resp.set("players", objectMapper.valueToTree(
-                players.values().stream().map(pl -> Map.of("id", pl.id, "x", pl.x, "y", pl.y, "name", pl.name,"last_x",
-                 pl.last_x, "last_y",pl.last_y, "dir", pl.dir, "last_dir", pl.last_dir, "health", pl.health, "mana", pl.mana)).toList()));
+            players.values().stream().map(pl ->
+                Map.ofEntries(
+                    Map.entry("id", pl.id),
+                    Map.entry("x", pl.x),
+                    Map.entry("y", pl.y),
+                    Map.entry("name", pl.name),
+                    Map.entry("last_x", pl.last_x),
+                    Map.entry("last_y", pl.last_y),
+                    Map.entry("dir", pl.dir),
+                    Map.entry("last_dir", pl.last_dir),
+                    Map.entry("health", pl.health),
+                    Map.entry("mana", pl.mana),
+                    Map.entry("isHitting", pl.isHitting),
+                    Map.entry("timeFromLastHit", pl.timeFromLastHit)
+                )
+            ).toList()
+        ));
         String msg = resp.toString();
         broadcast(msg);
     }

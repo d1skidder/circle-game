@@ -9,6 +9,8 @@ public abstract class Player extends Circle {
     public double health_regen;
     public double last_dir;
     public double dir;
+    public double timeFromLastHit;
+    public boolean isHitting = false;
 
     public int skill1cd = 0;
     public int basicMeleeCD = 0;
@@ -38,6 +40,9 @@ public abstract class Player extends Circle {
         if (mana < 100.0) {
             mana = Math.min(100.0, mana+mana_regen);
         }
+        if (isHitting && System.currentTimeMillis() - timeFromLastHit >= 200) {
+            isHitting = false;
+        }  
         if (health < 100.0) {
             health = Math.min(100.0, health+health_regen);
         }
