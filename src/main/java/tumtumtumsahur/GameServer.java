@@ -54,7 +54,7 @@ public class GameServer extends WebSocketServer {
     public void onOpen(WebSocket ws, ClientHandshake hnsk) {
         String playerID = UUID.randomUUID().toString();
         System.out.println("Player: " + playerID + " has joined the game");
-        players.put(ws, new Fire1(playerID,"hi", 0, 0));
+        players.put(ws, new Fire(playerID,"hi", 0, 0));
 
         // tell res tof clients new player spawned
         ObjectNode response = objectMapper.createObjectNode();
@@ -111,9 +111,6 @@ public class GameServer extends WebSocketServer {
                     }
                 }
             }
-            ObjectNode response = objectMapper.createObjectNode();
-            response.put("type", "basicMelee");
-            ws.send(response.toString());
         }
     }
 
