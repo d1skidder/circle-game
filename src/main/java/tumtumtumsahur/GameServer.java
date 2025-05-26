@@ -23,8 +23,8 @@ public class GameServer extends WebSocketServer {
 
 
     public GameServer() {
-        super(new InetSocketAddress("0.0.0.0", getEnvPort()));
-        //super(new InetSocketAddress("localhost", 8080));
+        //super(new InetSocketAddress("0.0.0.0", getEnvPort()));
+        super(new InetSocketAddress("localhost", 8080));
         this.objectMapper = new ObjectMapper();
         this.players = new HashMap<>();
         this.projectiles = Collections.newSetFromMap(new ConcurrentHashMap<>());
@@ -54,7 +54,7 @@ public class GameServer extends WebSocketServer {
     public void onOpen(WebSocket ws, ClientHandshake hnsk) {
         String playerID = UUID.randomUUID().toString();
         System.out.println("Player: " + playerID + " has joined the game");
-        players.put(ws, new Fire(playerID,"hi", 0, 0));
+        players.put(ws, new Ice(playerID,"hi", 0, 0));
 
         // tell res tof clients new player spawned
         ObjectNode response = objectMapper.createObjectNode();
@@ -79,26 +79,19 @@ public class GameServer extends WebSocketServer {
         }
     }  
     
-    private void createProjectile(WebSocket ws, JsonNode jsonNode) {
-        if (jsonNode.get("dir") == null || jsonNode.get("dir").isNull()) return;
-        double dir = jsonNode.get("dir").asDouble(); // mouse direction
-        Player player = players.get(ws);
-        if (player != null) {
-            Projectile newproj = player.skill_1(dir);
-            if (newproj != null) {
-                projectiles.add(newproj);
-            }
+    private void createProjectile(Set<Projectile> newproj) {
+        if (newproj == null) {
+            return;
+        }
+        for (Projectile proj : newproj) {
+            projectiles.add(proj);
         }
     }
 
-    private void meleeAttack(WebSocket ws, JsonNode jsonNode) {
-        if (jsonNode.get("dir") == null || jsonNode.get("dir").isNull()) return;
-        double dir = jsonNode.get("dir").asDouble(); // mouse direction
-        Player pl = players.get(ws);
-        Sweep swp = pl.basicMelee(dir);
+    private void meleeAttack(Sweep swp, Player pl, double time) {
         if(pl.isHitting == false) {
             pl.isHitting = true;
-            pl.timeFromLastHit = jsonNode.get("time").asDouble();
+            pl.timeFromLastHit = time;
         }
         if (swp != null) {
             for (WebSocket oppws : players.keySet()) {
@@ -114,6 +107,54 @@ public class GameServer extends WebSocketServer {
         }
     }
 
+    private void handleAttack(WebSocket ws, JsonNode jsonNode) {
+        if (jsonNode.get("move") == null || jsonNode.get("move").isNull()) return;
+        if (jsonNode.get("dir") == null || jsonNode.get("dir").isNull()) return;
+
+        String move = jsonNode.get("move").asText(); //which attack is being used
+        double dir = jsonNode.get("dir").asDouble(); // mouse direction
+        double time = 0; //get time
+        if (jsonNode.get("time") != null) {
+            time = jsonNode.get("time").asDouble();
+        }
+
+        Player pl = players.get(ws);
+        System.out.println(pl.skill_1_type);
+        if (pl == null) return;
+        switch (move) {
+            case "basicMelee":
+                meleeAttack(pl.basicMelee(dir), pl, time);
+                break;
+            case "skill1":
+                if (pl.skill_1_type.equals("projectile")) {
+                    createProjectile((Set<Projectile>) pl.skill_1(dir));
+                } 
+                else if (pl.skill_1_type.equals("melee")) {
+                    meleeAttack((Sweep)pl.skill_1(dir), pl, time);
+                }
+                break;
+            case "skill2":
+                if (pl.skill_2_type.equals("projectile")) {
+                    createProjectile((Set<Projectile>) pl.skill_2(dir));
+                } 
+                else if (pl.skill_2_type.equals("melee")) {
+                    meleeAttack((Sweep)pl.skill_2(dir), pl, time);
+                }
+                break;
+            case "skill3":
+                if (pl.skill_2_type.equals("projectile")) {
+                    createProjectile((Set<Projectile>) pl.skill_3(dir));
+                } 
+                else if (pl.skill_2_type.equals("melee")) {
+                    meleeAttack((Sweep)pl.skill_3(dir), pl, time);
+                }
+                break;
+            default:
+                System.out.println("unknown move " + move);
+                break;
+        }   
+    }
+
     private void projectileCollisions(WebSocket ws) {
         Player pl = players.get(ws);
         if (pl == null) return;
@@ -125,6 +166,9 @@ public class GameServer extends WebSocketServer {
                     players.remove(ws);
                     return;
                 }
+                //check projectile effects
+                pl.slow = proj.slow;
+                pl.slow_time = proj.slow_time;
             }
         }
     }
@@ -141,16 +185,11 @@ public class GameServer extends WebSocketServer {
                 case "ping":
                     handlePingMessage(ws, jsonNode);
                     break;
-
                 case "move":
                     handleMovement(ws, jsonNode);
                     break;
-
-                case "skill1":
-                    createProjectile(ws, jsonNode);
-                    break;
-                case "basicMelee":
-                    meleeAttack(ws, jsonNode);
+                case "attack":
+                    handleAttack(ws, jsonNode);
                     break;
                 default:
                     System.out.println("what the fuck is this message " + type);
@@ -198,6 +237,12 @@ public class GameServer extends WebSocketServer {
         for (Projectile p : projectiles) {
             p.update();
             if (p.time == 0) {
+                //cluster shot case
+                if (p.type.equals("clusterfireball")) {
+                    for (int i = 0; i < 8; i++) {
+                        projectiles.add(new Fireball(UUID.randomUUID().toString(), p.x, p.y, i*Math.PI/4, p.playerID));
+                    }
+                }
                 projectiles.remove(p);
             }
         }
@@ -236,8 +281,15 @@ public class GameServer extends WebSocketServer {
         ObjectNode resp = objectMapper.createObjectNode();
         resp.put("type", "projectiles");
         resp.set("projectiles", objectMapper.valueToTree(
-                projectiles.stream().map(pr -> Map.of("id", pr.id, "x", pr.x, "y", pr.y, "last_x", pr.last_x, "last_y",pr.last_y,
-                "radius", pr.radius)).toList()));
+            projectiles.stream().map(pr -> 
+                Map.of(
+                    "id", pr.id, 
+                    "x", pr.x, 
+                    "y", pr.y,
+                    "last_x", pr.last_x, 
+                    "last_y",pr.last_y,
+                    "radius", pr.radius,
+                    "type", pr.type)).toList()));
 
         String msg = resp.toString();
         broadcast(msg);

@@ -1,5 +1,7 @@
 package tumtumtumsahur;
 
+import java.util.*;
+
 
 public abstract class Player extends Circle {    
     String name;
@@ -11,9 +13,14 @@ public abstract class Player extends Circle {
     public double dir;
     public double timeFromLastHit;
     public boolean isHitting = false;
+    public double slow;
 
+    //timers
     public int skill1cd = 0;
+    public int skill2cd = 0;
+    public int skill3cd = 0;
     public int basicMeleeCD = 0;
+    public int slow_time = 0;
 
     // woah weird ass constructor methods
     public Player(String id, String name, double x, double y) {
@@ -23,19 +30,33 @@ public abstract class Player extends Circle {
         radius = 20.0;
     }
 
-    //Basic projectile skill
-    public abstract Projectile skill_1(double dir);
+    //if type is projectile return projectile set, if melee return sweep
+    //1st skill
+    public String skill_1_type;
+    public abstract Object skill_1(double dir);
+
+    //2nd skill
+    public String skill_2_type;
+    public abstract Object skill_2(double dir);
+
+    //3rd skill
+    public String skill_3_type;
+    public abstract Object skill_3(double dir);
 
     //Basic melee attack
     public Sweep basicMelee(double dir) {
         if (basicMeleeCD > 0) return null;
-        this.basicMeleeCD += 5;
-        return new Sweep(this.x, this.y, dir, 100.0, Math.PI*1.2, 40.0);
+        this.basicMeleeCD += 8;
+        return new Sweep(this.x, this.y, dir, 100.0, Math.PI*1.2, 20.0);
     }
 
 
     //add update all stats by time
     public void update() {
+        if (this.slow_time > 0) {
+            this.x_vel *= slow;
+            this.y_vel *= slow;
+        }
         super.update();
         if (mana < 100.0) {
             mana = Math.min(100.0, mana+mana_regen);
@@ -49,8 +70,17 @@ public abstract class Player extends Circle {
         if (skill1cd > 0) {
             skill1cd--;
         }
+        if (skill2cd > 0) {
+            skill1cd--;
+        }
+        if (skill3cd > 0) {
+            skill1cd--;
+        }
         if (basicMeleeCD > 0) {
             basicMeleeCD--;
+        }
+        if (slow_time > 0) {
+            slow_time--;
         }
     }
 
