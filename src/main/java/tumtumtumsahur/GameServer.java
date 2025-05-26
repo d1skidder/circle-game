@@ -215,7 +215,7 @@ public class GameServer extends WebSocketServer {
         resp.put("type", "players");
         resp.set("players", objectMapper.valueToTree(
                 players.values().stream().map(pl -> Map.of("id", pl.id, "x", pl.x, "y", pl.y, "name", pl.name,"last_x",
-                 pl.last_x, "last_y",pl.last_y, "dir", pl.dir, "last_dir", pl.last_dir, "health", pl.health, "mana", pl.mana)).toList()));
+                 pl.last_x, "last_y",pl.last_y, "dir", pl.dir, "last_dir", pl.last_dir, "health", pl.health, "mana", pl.mana, "isHitting", pl.isHitting, "timeFromLastHit", pl.timeFromLastHit)).toList()));
         String msg = resp.toString();
         broadcast(msg);
     }
