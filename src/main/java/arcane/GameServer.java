@@ -87,8 +87,30 @@ public class GameServer extends WebSocketServer {
         }
     }
 
+    private void meleeAttack(WebSocket ws, JsonNode jsonNode) {
+        if (jsonNode.get("x") == null || jsonNode.get("x").isNull()) return;
+        if (jsonNode.get("y") == null || jsonNode.get("y").isNull()) return;
+        double x = jsonNode.get("x").asDouble(); // x component
+        double y = jsonNode.get("y").asDouble(); // y component
+        Player pl = players.get(ws);
+        Sweep swp = pl.basicMelee(x, y);
+        if (swp != null) {
+            for (WebSocket oppws : players.keySet()) {
+                Player opp = players.get(oppws);
+                if (opp.id != pl.id && swp.collision(opp)) {
+                    opp.health -= swp.damage;
+                    if (opp.health <= 0.0) {
+                        players.remove(oppws);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
     private void projectileCollisions(WebSocket ws) {
         Player pl = players.get(ws);
+        if (pl == null) return;
         for (Projectile proj : projectiles) {
             if (!proj.hitPlayers.contains(pl.id) && pl.collision(proj)) {
                 pl.health -= proj.damage;
@@ -118,10 +140,12 @@ public class GameServer extends WebSocketServer {
                     handleMovement(ws, jsonNode);
                     break;
 
-                case "skill":
+                case "skill1":
                     createProjectile(ws, jsonNode);
                     break;
-
+                case "basicMelee":
+                    meleeAttack(ws, jsonNode);
+                    break;
                 default:
                     System.out.println("what the fuck is this message " + type);
                     break;

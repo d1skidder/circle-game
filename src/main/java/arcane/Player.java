@@ -9,6 +9,7 @@ public abstract class Player extends Circle {
     public double health_regen;
 
     public int skill1cd = 0;
+    public int basicMeleeCD = 0;
 
     // woah weird ass constructor methods
     public Player(String id, String name, double x, double y) {
@@ -21,6 +22,14 @@ public abstract class Player extends Circle {
     //Basic projectile skill
     public abstract Projectile skill_1(double x, double y);
 
+    //Basic melee attack
+    public Sweep basicMelee(double x_mouse, double y_mouse) {
+        if (basicMeleeCD > 0) return null;
+        this.basicMeleeCD += 5;
+        return new Sweep(this.x, this.y, x_mouse, y_mouse, 100.0, Math.PI*1.2, 40.0);
+    }
+
+
     //add update all stats by time
     public void update() {
         super.update();
@@ -32,6 +41,9 @@ public abstract class Player extends Circle {
         }
         if (skill1cd > 0) {
             skill1cd--;
+        }
+        if (basicMeleeCD > 0) {
+            basicMeleeCD--;
         }
     }
 
