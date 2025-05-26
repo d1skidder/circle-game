@@ -8,11 +8,11 @@ public class Sweep {
     private double sweep;
     public double damage;
 
-    public Sweep(double x, double y, double x_mouse, double y_mouse, double radius, double sweep, double damage) {
+    public Sweep(double x, double y, double dir, double radius, double sweep, double damage) {
         this.x = x;
         this.y = y;
         this.radius = radius;
-        this.dir = Math.atan2(y_mouse-y, x_mouse-x);
+        this.dir = dir;
         this.sweep = sweep;
         this.damage = damage;
     }

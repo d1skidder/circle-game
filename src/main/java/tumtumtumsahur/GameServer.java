@@ -66,22 +66,24 @@ public class GameServer extends WebSocketServer {
     private void handleMovement(WebSocket ws, JsonNode jsonNode) {
         if (jsonNode.get("x") == null || jsonNode.get("x").isNull()) return;
         if (jsonNode.get("y") == null || jsonNode.get("y").isNull()) return;
+        if (jsonNode.get("dir") == null || jsonNode.get("dir").isNull()) return;
         double x = jsonNode.get("x").asDouble(); // x component
         double y = jsonNode.get("y").asDouble(); // y component
+        double dir = jsonNode.get("y").asDouble(); // mouse direction
+
         Player player = players.get(ws);
         if (player != null) {
             player.updateVelocity(x, y);
+            player.dir = dir;
         }
     }  
     
     private void createProjectile(WebSocket ws, JsonNode jsonNode) {
-        if (jsonNode.get("x") == null || jsonNode.get("x").isNull()) return;
-        if (jsonNode.get("y") == null || jsonNode.get("y").isNull()) return;
-        double x = jsonNode.get("x").asDouble(); // x component
-        double y = jsonNode.get("y").asDouble(); // y component
+        if (jsonNode.get("dir") == null || jsonNode.get("dir").isNull()) return;
+        double dir = jsonNode.get("dir").asDouble(); // mouse direction
         Player player = players.get(ws);
         if (player != null) {
-            Projectile newproj = player.skill_1(x, y);
+            Projectile newproj = player.skill_1(dir);
             if (newproj != null) {
                 projectiles.add(newproj);
             }
@@ -89,12 +91,10 @@ public class GameServer extends WebSocketServer {
     }
 
     private void meleeAttack(WebSocket ws, JsonNode jsonNode) {
-        if (jsonNode.get("x") == null || jsonNode.get("x").isNull()) return;
-        if (jsonNode.get("y") == null || jsonNode.get("y").isNull()) return;
-        double x = jsonNode.get("x").asDouble(); // x component
-        double y = jsonNode.get("y").asDouble(); // y component
+        if (jsonNode.get("dir") == null || jsonNode.get("dir").isNull()) return;
+        double dir = jsonNode.get("dir").asDouble(); // mouse direction
         Player pl = players.get(ws);
-        Sweep swp = pl.basicMelee(x, y);
+        Sweep swp = pl.basicMelee(dir);
         if (swp != null) {
             for (WebSocket oppws : players.keySet()) {
                 Player opp = players.get(oppws);
@@ -207,7 +207,7 @@ public class GameServer extends WebSocketServer {
         resp.put("type", "players");
         resp.set("players", objectMapper.valueToTree(
                 players.values().stream().map(pl -> Map.of("id", pl.id, "x", pl.x, "y", pl.y, "name", pl.name,"last_x",
-                 pl.last_x, "last_y",pl.last_y, "health", pl.health, "mana", pl.mana)).toList()));
+                 pl.last_x, "last_y",pl.last_y, "dir", pl.dir, "health", pl.health, "mana", pl.mana)).toList()));
         String msg = resp.toString();
         broadcast(msg);
     }
