@@ -6,6 +6,7 @@ public abstract class Projectile extends Circle {
     public double damage;
     public Set<String> hitPlayers;
     private String playerID;
+    public String type;
 
     public Projectile(String id, double x, double y, double x_vel, double y_vel, double vel, String pl_id) {
         super(id, x, y);
