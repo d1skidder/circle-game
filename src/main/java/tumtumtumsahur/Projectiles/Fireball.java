@@ -1,8 +1,8 @@
-package arcane.Projectiles;
+package tumtumtumsahur.Projectiles;
 
 import java.util.HashSet;
 
-import arcane.Projectile;
+import tumtumtumsahur.Projectile;
 
 public class Fireball extends Projectile {
 

@@ -1,4 +1,4 @@
-package arcane;
+package tumtumtumsahur;
 
 import java.net.InetSocketAddress;
 
@@ -8,11 +8,12 @@ import org.java_websocket.server.WebSocketServer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import tumtumtumsahur.Classes.*;
+import tumtumtumsahur.Projectiles.*;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-
-import arcane.Classes.*;
-import arcane.Projectiles.*;
 
 public class GameServer extends WebSocketServer {
     private final ObjectMapper objectMapper;

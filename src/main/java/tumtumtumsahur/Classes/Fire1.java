@@ -1,9 +1,9 @@
-package arcane.Classes;
+package tumtumtumsahur.Classes;
 
 import java.util.UUID;
 
-import arcane.*;
-import arcane.Projectiles.*;
+import tumtumtumsahur.*;
+import tumtumtumsahur.Projectiles.*;
 
 public class Fire1 extends Player {
     public Fire1(String id, String name, double x, double y) {
