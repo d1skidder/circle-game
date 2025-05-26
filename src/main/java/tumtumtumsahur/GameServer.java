@@ -69,7 +69,7 @@ public class GameServer extends WebSocketServer {
         if (jsonNode.get("dir") == null || jsonNode.get("dir").isNull()) return;
         double x = jsonNode.get("x").asDouble(); // x component
         double y = jsonNode.get("y").asDouble(); // y component
-        double dir = jsonNode.get("y").asDouble(); // mouse direction
+        double dir = jsonNode.get("dir").asDouble(); // mouse direction
 
         Player player = players.get(ws);
         if (player != null) {
