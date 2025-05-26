@@ -7,6 +7,7 @@ public abstract class Player extends Circle {
     public double mana = 100.0;
     public double mana_regen;
     public double health_regen;
+    public double last_dir;
     public double dir;
 
     public int skill1cd = 0;

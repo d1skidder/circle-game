@@ -74,6 +74,7 @@ public class GameServer extends WebSocketServer {
         Player player = players.get(ws);
         if (player != null) {
             player.updateVelocity(x, y);
+            player.last_dir = player.dir;
             player.dir = dir;
         }
     }  
@@ -106,6 +107,9 @@ public class GameServer extends WebSocketServer {
                     }
                 }
             }
+            ObjectNode response = objectMapper.createObjectNode();
+            response.put("type", "basicMelee");
+            ws.send(response.toString());
         }
     }
 
@@ -207,7 +211,7 @@ public class GameServer extends WebSocketServer {
         resp.put("type", "players");
         resp.set("players", objectMapper.valueToTree(
                 players.values().stream().map(pl -> Map.of("id", pl.id, "x", pl.x, "y", pl.y, "name", pl.name,"last_x",
-                 pl.last_x, "last_y",pl.last_y, "dir", pl.dir, "health", pl.health, "mana", pl.mana)).toList()));
+                 pl.last_x, "last_y",pl.last_y, "dir", pl.dir, "last_dir", pl.last_dir, "health", pl.health, "mana", pl.mana)).toList()));
         String msg = resp.toString();
         broadcast(msg);
     }
