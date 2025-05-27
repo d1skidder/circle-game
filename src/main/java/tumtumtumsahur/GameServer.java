@@ -23,8 +23,8 @@ public class GameServer extends WebSocketServer {
 
 
     public GameServer() {
-        super(new InetSocketAddress("0.0.0.0", getEnvPort()));
-        //super(new InetSocketAddress("localhost", 8080));
+        //super(new InetSocketAddress("0.0.0.0", getEnvPort()));
+        super(new InetSocketAddress("localhost", 8080));
         this.objectMapper = new ObjectMapper();
         this.players = new HashMap<>();
         this.projectiles = Collections.newSetFromMap(new ConcurrentHashMap<>());
@@ -50,17 +50,46 @@ public class GameServer extends WebSocketServer {
         }, 0, 100);
     }
 
-    @Override
-    public void onOpen(WebSocket ws, ClientHandshake hnsk) {
+    private void handleJoin(WebSocket ws, JsonNode jsonNode) {
+        String name = jsonNode.has("name") ? jsonNode.get("name").asText() : "unnamed";
+        String gameClass = jsonNode.get("class").asText();
         String playerID = UUID.randomUUID().toString();
-        System.out.println("Player: " + playerID + " has joined the game");
-        players.put(ws, new Ice(playerID,"hi", 0, 0));
-
-        // tell res tof clients new player spawned
+        Player player;
+        switch (gameClass) {
+            case "fire":
+                player = new Fire(playerID, name, 0, 0);
+                players.put(ws, player);
+                break;
+            case "ice":
+                player = new Ice(playerID, name, 0, 0);
+                players.put(ws, player);
+                break;
+            case "earth":
+                break;
+            case "blood":
+                break;
+            default:
+                System.out.println("Error: class " + gameClass + " does not exist");
+        }  
         ObjectNode response = objectMapper.createObjectNode();
         response.put("type", "init");
         response.put("id", playerID);
         ws.send(response.toString());
+
+        System.out.println("Player joined: " + name + " (" + playerID + ")");
+    }
+
+    @Override
+    public void onOpen(WebSocket ws, ClientHandshake hnsk) {
+        // String playerID = UUID.randomUUID().toString();
+        // System.out.println("Player: " + playerID + " has joined the game");
+        // players.put(ws, new Ice(playerID,"hi", 0, 0));
+
+        // // tell res tof clients new player spawned
+        // ObjectNode response = objectMapper.createObjectNode();
+        // response.put("type", "init");
+        // response.put("id", playerID);
+        // ws.send(response.toString());
     }
 
     private void handleMovement(WebSocket ws, JsonNode jsonNode) {
@@ -166,6 +195,9 @@ public class GameServer extends WebSocketServer {
 
             // wtf this is just js on steroids
             switch (type) {
+                case "join":
+                    handleJoin(ws, jsonNode);
+                    break;
                 case "ping":
                     handlePingMessage(ws, jsonNode);
                     break;

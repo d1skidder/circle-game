@@ -68,10 +68,10 @@ public abstract class Player extends Circle {
             skill1cd--;
         }
         if (skill2cd > 0) {
-            skill1cd--;
+            skill2cd--;
         }
         if (skill3cd > 0) {
-            skill1cd--;
+            skill3cd--;
         }
         if (basicMeleeCD > 0) {
             basicMeleeCD--;
