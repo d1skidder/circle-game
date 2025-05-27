@@ -276,6 +276,10 @@ public class GameServer extends WebSocketServer {
     }
 
     private void update() {
+        for (WebSocket ws : players.keySet()) {
+            players.get(ws).update();
+            projectileCollisions(ws);
+        }
         for (Projectile p : projectiles) {
             p.update();
             if (p.time == 0) {
@@ -287,10 +291,6 @@ public class GameServer extends WebSocketServer {
                 }
                 projectiles.remove(p);
             }
-        }
-        for (WebSocket ws : players.keySet()) {
-            players.get(ws).update();
-            projectileCollisions(ws);
         }
     }
 
