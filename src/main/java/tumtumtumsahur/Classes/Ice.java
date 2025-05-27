@@ -24,7 +24,7 @@ public class Ice extends Player {
         mana -= manacost;
         Set<Projectile> res = new HashSet<Projectile> ();
         for (int i = -1; i <= 1; i++) {
-            res.add(new Icicle(UUID.randomUUID().toString(),x,y,dir+i*Math.PI/6, this.id)); 
+            res.add(new Icicle(UUID.randomUUID().toString(),x,y,dir+i*Math.PI/12, this.id)); 
         }
         return res;
     }
@@ -47,7 +47,7 @@ public class Ice extends Player {
         if (mana <= manacost || skill3cd > 0) {
             return null;
         }
-        skill3cd += 100;
+        skill3cd += 70;
         mana -= manacost;
         String projectileId = UUID.randomUUID().toString();
         return new HashSet<Projectile> (Arrays.asList(new SnowStorm(projectileId, this.x, this.y, dir, this.id)));
