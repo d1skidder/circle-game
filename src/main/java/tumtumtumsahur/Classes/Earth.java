@@ -10,7 +10,8 @@ public class Earth extends Player {
     public Earth(String id, String name, double x, double y) {
         super(id,name, x, y);
         mana_regen = 2.0;
-        health_regen = 1.0;
+        health_regen = 0.8;
+        this.gameClass = "earth";
     }
 
      //enhanced melee attack

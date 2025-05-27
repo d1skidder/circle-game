@@ -4,7 +4,8 @@ import java.util.*;
 
 
 public abstract class Player extends Circle {    
-    String name;
+    String name; 
+    public String gameClass;
     public double health = 100.0;
     public double mana = 100.0;
     public double mana_regen;
@@ -23,6 +24,7 @@ public abstract class Player extends Circle {
     public int slow_time = 0;
     public int stun_time = 0;
     public int invincible_time = 0;
+    public int frenzy_time = 0;
 
     //earth class shenanigans
     public boolean basicEnhanced = false;
@@ -56,10 +58,13 @@ public abstract class Player extends Circle {
 
     //add update all stats by time
     public void update() {
-        System.out.println(basicEnhanced);
         if (this.slow_time > 0) {
             this.x_vel *= slow;
             this.y_vel *= slow;
+        }
+        if (this.frenzy_time > 0) {
+            this.x_vel *= 1.5;
+            this.y_vel *= 1.5;
         }
         if (this.stun_time > 0) {
             this.x_vel = 0;
@@ -95,6 +100,9 @@ public abstract class Player extends Circle {
         }
         if (invincible_time > 0) {
             invincible_time--;
+        }
+        if (frenzy_time > 0) {
+            frenzy_time--;
         }
     }
 

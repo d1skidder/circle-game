@@ -69,6 +69,8 @@ public class GameServer extends WebSocketServer {
                 players.put(ws, player);
                 break;
             case "blood":
+                player = new Blood(playerID, name, 0, 0);
+                players.put(ws, player);
                 break;
             default:
                 System.out.println("Error: class " + gameClass + " does not exist");
@@ -130,6 +132,17 @@ public class GameServer extends WebSocketServer {
                 if (opp.id != pl.id && swp.collision(opp)) {
                     if (opp.invincible_time == 0) {
                         opp.health -= swp.damage;
+    
+                        //blood class shit
+                        if (opp.frenzy_time > 0) {
+                            opp.health -= swp.damage * 0.5;
+                        }
+                        if (pl.gameClass.equals("blood")) {
+                            pl.health = Math.min(100.0, pl.health+10);
+                            if (pl.frenzy_time > 0) {
+                                pl.health = Math.min(100.0, pl.health+5);
+                            }
+                        }
                     }
                     if (opp.health <= 0.0) {
                         players.remove(oppws);
@@ -148,6 +161,10 @@ public class GameServer extends WebSocketServer {
             if (!proj.hitPlayers.contains(pl.id) && pl.collision(proj)) {
                 if (pl.invincible_time == 0) {
                     pl.health -= proj.damage;
+                    //blood class shit
+                    if (pl.frenzy_time > 0) {
+                        pl.health -= proj.damage * 0.5;
+                    }
                 }
                 proj.hitPlayers.add(pl.id);
                 if (pl.health <= 0.0) {
@@ -296,7 +313,8 @@ public class GameServer extends WebSocketServer {
                     Map.entry("isHitting", pl.isHitting),
                     Map.entry("basicEnhanced", pl.basicEnhanced),
                     Map.entry("timeFromLastHit", pl.timeFromLastHit),
-                    Map.entry("isInvincible", (pl.invincible_time>0))
+                    Map.entry("isInvincible", (pl.invincible_time>0)),
+                    Map.entry("isFrenzy", (pl.frenzy_time>0))
                 )
             ).toList()
         ));

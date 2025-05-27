@@ -11,13 +11,7 @@ public class Ice extends Player {
         super(id,name, x, y);
         mana_regen = 2.0;
         health_regen = 0.5;
-    }
-
-    //enhanced melee attack
-    public Sweep basicMelee(double dir) {
-        if (basicMeleeCD > 0) return null;
-        this.basicMeleeCD += 5;
-        return new Sweep(this.x, this.y, dir, 100.0, Math.PI*1.2, 30.0);
+        this.gameClass = "ice";
     }
 
     //triple icicle shot

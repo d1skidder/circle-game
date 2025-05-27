@@ -11,6 +11,7 @@ public class Fire extends Player {
         super(id,name, x, y);
         mana_regen = 2.0;
         health_regen = 0.5;
+        this.gameClass = "fire";
     }
     
 
