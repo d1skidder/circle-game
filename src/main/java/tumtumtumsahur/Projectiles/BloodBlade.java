@@ -10,7 +10,7 @@ public class BloodBlade extends Projectile {
         super(id, x_pos, y_pos, 60.0*Math.cos(dir), 60.0*Math.sin(dir), 60.0, pl_id);
         this.time = 5;
         this.radius = 5.0;
-        this.damage = 20.0;
+        this.damage = 5.0;
         this.type = "bloodblade";
     }
 

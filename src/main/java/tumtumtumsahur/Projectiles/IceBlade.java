@@ -16,7 +16,7 @@ public class IceBlade extends Projectile {
     public void update() {
         if (this.time <= 47) {
             this.x_vel = 0.0; this.y_vel = 0.0;
-            if (this.time % 10 == 0) {
+            if (this.time % 5 == 0) {
                 this.hitPlayers.clear();
                 this.hitPlayers.add(this.playerID);
             }
