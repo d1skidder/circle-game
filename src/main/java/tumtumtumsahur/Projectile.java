@@ -11,6 +11,7 @@ public abstract class Projectile extends Circle {
     //slow effect
     public double slow = 1.0;
     public int slow_time = 0;
+    public int stun_time = 0;
 
     public Projectile(String id, double x, double y, double x_vel, double y_vel, double vel, String pl_id) {
         super(id, x, y);

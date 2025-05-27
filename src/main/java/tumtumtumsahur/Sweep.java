@@ -8,6 +8,8 @@ public class Sweep {
     private double sweep;
     public double damage;
 
+    public int stun_time = 0;
+
     public Sweep(double x, double y, double dir, double radius, double sweep, double damage) {
         this.x = x;
         this.y = y;

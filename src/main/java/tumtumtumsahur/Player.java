@@ -21,6 +21,12 @@ public abstract class Player extends Circle {
     public int skill3cd = 0;
     public int basicMeleeCD = 0;
     public int slow_time = 0;
+    public int stun_time = 0;
+    public int invincible_time = 0;
+
+    //earth class shenanigans
+    public boolean basicEnhanced = false;
+
 
     // woah weird ass constructor methods
     public Player(String id, String name, double x, double y) {
@@ -50,9 +56,14 @@ public abstract class Player extends Circle {
 
     //add update all stats by time
     public void update() {
+        System.out.println(basicEnhanced);
         if (this.slow_time > 0) {
             this.x_vel *= slow;
             this.y_vel *= slow;
+        }
+        if (this.stun_time > 0) {
+            this.x_vel = 0;
+            this.y_vel = 0;
         }
         super.update();
         if (mana < 100.0) {
@@ -78,6 +89,12 @@ public abstract class Player extends Circle {
         }
         if (slow_time > 0) {
             slow_time--;
+        }
+        if (stun_time > 0) {
+            stun_time--;
+        }
+        if (invincible_time > 0) {
+            invincible_time--;
         }
     }
 

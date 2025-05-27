@@ -1,0 +1,66 @@
+package tumtumtumsahur.Classes;
+
+import java.util.*;
+
+import tumtumtumsahur.*;
+import tumtumtumsahur.Projectiles.*;
+
+public class Earth extends Player {
+
+    public Earth(String id, String name, double x, double y) {
+        super(id,name, x, y);
+        mana_regen = 2.0;
+        health_regen = 1.0;
+    }
+
+     //enhanced melee attack
+     public Sweep basicMelee(double dir) {
+        if (basicMeleeCD > 0) return null;
+        this.basicMeleeCD += 5;
+        if (basicEnhanced) {
+            Sweep res = new Sweep(this.x, this.y, dir, 100.0, Math.PI*1.2, 40.0);
+            res.stun_time = 10;
+            skill1cd = 50;
+            basicEnhanced = false;
+            return res;
+        }
+        return new Sweep(this.x, this.y, dir, 100.0, Math.PI*1.2, 20.0);
+    }
+
+    //enhance basic attack to stun +damage
+    public Set<Projectile> skill_1 (double dir) {
+        double manacost = 20.0;
+        if (mana <= manacost || skill1cd > 0) {
+            return null;
+        }
+        skill1cd = 50;
+        mana -= manacost;
+        basicEnhanced = true;
+        return null;
+    }
+
+    //stunning shockwave
+    public Set<Projectile>  skill_2 (double dir) {
+        double manacost = 70.0;
+        if (mana <= manacost || skill2cd > 0) {
+            return null;
+        }
+        skill2cd += 5;
+        mana -= manacost;
+        String projectileId = UUID.randomUUID().toString();
+        return new HashSet<Projectile> (Arrays.asList(new Shockwave(projectileId, this.x, this.y, dir, this.id)));
+    }
+
+    //temporary invincible
+    public Set<Projectile>  skill_3 (double dir) {
+        double manacost = 50.0;
+        if (mana <= manacost || skill3cd > 0) {
+            return null;
+        }
+        skill3cd += 100;
+        mana -= manacost;
+        this.invincible_time = 20;
+        return null;
+    }
+
+}

@@ -12,6 +12,7 @@ public class Fire extends Player {
         mana_regen = 2.0;
         health_regen = 0.5;
     }
+    
 
     //small fireball
     public Set<Projectile> skill_1 (double dir) {

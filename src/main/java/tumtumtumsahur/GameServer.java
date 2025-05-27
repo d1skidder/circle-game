@@ -23,8 +23,8 @@ public class GameServer extends WebSocketServer {
 
 
     public GameServer() {
-        super(new InetSocketAddress("0.0.0.0", getEnvPort()));
-        //super(new InetSocketAddress("localhost", 8080));
+        //super(new InetSocketAddress("0.0.0.0", getEnvPort()));
+        super(new InetSocketAddress("localhost", 8080));
         this.objectMapper = new ObjectMapper();
         this.players = new HashMap<>();
         this.projectiles = Collections.newSetFromMap(new ConcurrentHashMap<>());
@@ -65,6 +65,8 @@ public class GameServer extends WebSocketServer {
                 players.put(ws, player);
                 break;
             case "earth":
+                player = new Earth(playerID, name, 0, 0);
+                players.put(ws, player);
                 break;
             case "blood":
                 break;
@@ -126,12 +128,36 @@ public class GameServer extends WebSocketServer {
             for (WebSocket oppws : players.keySet()) {
                 Player opp = players.get(oppws);
                 if (opp.id != pl.id && swp.collision(opp)) {
-                    opp.health -= swp.damage;
+                    if (opp.invincible_time == 0) {
+                        opp.health -= swp.damage;
+                    }
                     if (opp.health <= 0.0) {
                         players.remove(oppws);
                         return;
                     }
+                    opp.stun_time = swp.stun_time;
                 }
+            }
+        }
+    }
+
+    private void projectileCollisions(WebSocket ws) {
+        Player pl = players.get(ws);
+        if (pl == null) return;
+        for (Projectile proj : projectiles) {
+            if (!proj.hitPlayers.contains(pl.id) && pl.collision(proj)) {
+                if (pl.invincible_time == 0) {
+                    pl.health -= proj.damage;
+                }
+                proj.hitPlayers.add(pl.id);
+                if (pl.health <= 0.0) {
+                    players.remove(ws);
+                    return;
+                }
+                //check projectile effects
+                pl.slow = proj.slow;
+                pl.slow_time = proj.slow_time;
+                pl.stun_time = proj.stun_time;
             }
         }
     }
@@ -149,6 +175,7 @@ public class GameServer extends WebSocketServer {
 
         Player pl = players.get(ws);
         if (pl == null) return;
+        if (pl.stun_time > 0) return;
         switch (move) {
             case "basicMelee":
                 meleeAttack(pl.basicMelee(dir), pl, time);
@@ -166,24 +193,6 @@ public class GameServer extends WebSocketServer {
                 System.out.println("unknown move " + move);
                 break;
         }   
-    }
-
-    private void projectileCollisions(WebSocket ws) {
-        Player pl = players.get(ws);
-        if (pl == null) return;
-        for (Projectile proj : projectiles) {
-            if (!proj.hitPlayers.contains(pl.id) && pl.collision(proj)) {
-                pl.health -= proj.damage;
-                proj.hitPlayers.add(pl.id);
-                if (pl.health <= 0.0) {
-                    players.remove(ws);
-                    return;
-                }
-                //check projectile effects
-                pl.slow = proj.slow;
-                pl.slow_time = proj.slow_time;
-            }
-        }
     }
 
 
@@ -285,7 +294,9 @@ public class GameServer extends WebSocketServer {
                     Map.entry("health", pl.health),
                     Map.entry("mana", pl.mana),
                     Map.entry("isHitting", pl.isHitting),
-                    Map.entry("timeFromLastHit", pl.timeFromLastHit)
+                    Map.entry("basicEnhanced", pl.basicEnhanced),
+                    Map.entry("timeFromLastHit", pl.timeFromLastHit),
+                    Map.entry("isInvincible", (pl.invincible_time>0))
                 )
             ).toList()
         ));
