@@ -119,35 +119,19 @@ public class GameServer extends WebSocketServer {
         }
 
         Player pl = players.get(ws);
-        System.out.println(pl.skill_1_type);
         if (pl == null) return;
         switch (move) {
             case "basicMelee":
                 meleeAttack(pl.basicMelee(dir), pl, time);
                 break;
             case "skill1":
-                if (pl.skill_1_type.equals("projectile")) {
-                    createProjectile((Set<Projectile>) pl.skill_1(dir));
-                } 
-                else if (pl.skill_1_type.equals("melee")) {
-                    meleeAttack((Sweep)pl.skill_1(dir), pl, time);
-                }
+                createProjectile( pl.skill_1(dir));
                 break;
             case "skill2":
-                if (pl.skill_2_type.equals("projectile")) {
-                    createProjectile((Set<Projectile>) pl.skill_2(dir));
-                } 
-                else if (pl.skill_2_type.equals("melee")) {
-                    meleeAttack((Sweep)pl.skill_2(dir), pl, time);
-                }
+                createProjectile(pl.skill_2(dir));
                 break;
             case "skill3":
-                if (pl.skill_2_type.equals("projectile")) {
-                    createProjectile((Set<Projectile>) pl.skill_3(dir));
-                } 
-                else if (pl.skill_2_type.equals("melee")) {
-                    meleeAttack((Sweep)pl.skill_3(dir), pl, time);
-                }
+                createProjectile(pl.skill_3(dir));
                 break;
             default:
                 System.out.println("unknown move " + move);

@@ -11,10 +11,6 @@ public class Fire extends Player {
         super(id,name, x, y);
         mana_regen = 2.0;
         health_regen = 0.5;
-
-        //attack types
-        this.skill_1_type = "projectile";
-        this.skill_2_type = "projectile";
     }
 
     //small fireball

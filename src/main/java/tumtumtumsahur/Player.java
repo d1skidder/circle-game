@@ -32,16 +32,13 @@ public abstract class Player extends Circle {
 
     //if type is projectile return projectile set, if melee return sweep
     //1st skill
-    public String skill_1_type;
-    public abstract Object skill_1(double dir);
+    public abstract Set<Projectile> skill_1(double dir);
 
     //2nd skill
-    public String skill_2_type;
-    public abstract Object skill_2(double dir);
+    public abstract Set<Projectile> skill_2(double dir);
 
     //3rd skill
-    public String skill_3_type;
-    public abstract Object skill_3(double dir);
+    public abstract Set<Projectile> skill_3(double dir);
 
     //Basic melee attack
     public Sweep basicMelee(double dir) {
