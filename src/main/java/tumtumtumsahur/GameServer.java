@@ -81,10 +81,6 @@ public class GameServer extends WebSocketServer {
         response.put("type", "init");
         response.put("id", playerID);
         ws.send(response.toString());
-
-        for (Obstacle o : obstacles) {
-            System.out.println(o.id);
-        }
         broadcastObstacleData();
 
         System.out.println("Player joined: " + name + " (" + playerID + ")");

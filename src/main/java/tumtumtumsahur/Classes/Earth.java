@@ -34,7 +34,7 @@ public class Earth extends Player {
         if (mana <= manacost || skill1cd > 0) {
             return null;
         }
-        skill1cd = 50;
+        skill1cd = 30;
         mana -= manacost;
         basicEnhanced = true;
         return null;

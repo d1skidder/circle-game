@@ -27,7 +27,7 @@ public class Blood extends Player {
 
     //shoot bloodblades all around
     public Set<Projectile> skill_1 (double dir) {
-        double manacost =30.0;
+        double manacost =20.0;
         if (mana <= manacost || skill1cd > 0) {
             return null;
         }
