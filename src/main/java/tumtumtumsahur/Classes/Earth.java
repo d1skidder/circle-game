@@ -42,7 +42,7 @@ public class Earth extends Player {
 
     //stunning shockwave
     public Set<Projectile>  skill_2 (double dir) {
-        double manacost = 70.0;
+        double manacost = 50.0;
         if (mana <= manacost || skill2cd > 0) {
             return null;
         }

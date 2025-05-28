@@ -23,7 +23,7 @@ public abstract class Player extends Circle {
     public int basicMeleeCD = 0;
     public int slow_time = 0;
     public int stun_time = 0;
-    public int invincible_time = 0;
+    public int invincible_time = 30;
     public int frenzy_time = 0;
 
     //earth class shenanigans
