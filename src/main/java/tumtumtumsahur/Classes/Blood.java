@@ -43,10 +43,10 @@ public class Blood extends Player {
     //dash
     public Set<Projectile>  skill_2 (double dir) {
         double manacost =30.0;
-        if (mana <= manacost || skill1cd > 0) {
+        if (mana <= manacost || skill2cd > 0) {
             return null;
         }
-        skill2cd = 40;
+        skill2cd = 10;
         mana -= manacost;
         this.x += 50*Math.cos(dir);
         this.y += 50*Math.sin(dir);
@@ -59,7 +59,7 @@ public class Blood extends Player {
         if (mana <= manacost || skill3cd > 0) {
             return null;
         }
-        skill3cd += 70;
+        skill3cd = 70;
         frenzy_time = 50;
         mana -= manacost;
         return null;
