@@ -370,7 +370,9 @@ public class GameServer extends WebSocketServer {
                     "last_x", pr.last_x, 
                     "last_y",pr.last_y,
                     "radius", pr.radius,
-                    "type", pr.type)).toList()));
+                    "type", pr.type,
+                    "dir", (Math.atan2(pr.y_vel,pr.x_vel)))).toList())
+                    );
 
         String msg = resp.toString();
         broadcast(msg);
