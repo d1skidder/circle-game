@@ -74,7 +74,7 @@ public abstract class Player extends Circle {
         if (mana < 100.0) {
             mana = Math.min(100.0, mana+mana_regen);
         }
-        if (isHitting && System.currentTimeMillis() - timeFromLastHit >= 200) {
+        if (isHitting && System.currentTimeMillis() - timeFromLastHit >= 400) {
             isHitting = false;
         }  
         if (health < 100.0) {
