@@ -58,7 +58,7 @@ public class Earth extends Player {
         if (mana <= manacost || skill3cd > 0) {
             return null;
         }
-        skill3cd += 100;
+        skill3cd += 70;
         mana -= manacost;
         this.invincible_time = 20;
         return null;

@@ -19,15 +19,17 @@ public class GameServer extends WebSocketServer {
     private final ObjectMapper objectMapper;
     private final Map<WebSocket, Player> players;
     private final Set<Projectile> projectiles;
+    private final Set<Obstacle> obstacles;
     private final Timer gameLoopInterval;
 
 
     public GameServer() {
-        super(new InetSocketAddress("0.0.0.0", getEnvPort()));
-        //super(new InetSocketAddress("localhost", 8080));
+        //super(new InetSocketAddress("0.0.0.0", getEnvPort()));
+        super(new InetSocketAddress("localhost", 8080));
         this.objectMapper = new ObjectMapper();
         this.players = new HashMap<>();
         this.projectiles = Collections.newSetFromMap(new ConcurrentHashMap<>());
+        this.obstacles = new HashSet<Obstacle>();
         this.gameLoopInterval = new Timer(true);
     }
 
@@ -80,6 +82,11 @@ public class GameServer extends WebSocketServer {
         response.put("id", playerID);
         ws.send(response.toString());
 
+        for (Obstacle o : obstacles) {
+            System.out.println(o.id);
+        }
+        broadcastObstacleData();
+
         System.out.println("Player joined: " + name + " (" + playerID + ")");
     }
 
@@ -95,22 +102,6 @@ public class GameServer extends WebSocketServer {
         // response.put("id", playerID);
         // ws.send(response.toString());
     }
-
-    private void handleMovement(WebSocket ws, JsonNode jsonNode) {
-        if (jsonNode.get("x") == null || jsonNode.get("x").isNull()) return;
-        if (jsonNode.get("y") == null || jsonNode.get("y").isNull()) return;
-        if (jsonNode.get("dir") == null || jsonNode.get("dir").isNull()) return;
-        double x = jsonNode.get("x").asDouble(); // x component
-        double y = jsonNode.get("y").asDouble(); // y component
-        double dir = jsonNode.get("dir").asDouble(); // mouse direction
-
-        Player player = players.get(ws);
-        if (player != null) {
-            player.updateVelocity(x, y);
-            player.last_dir = player.dir;
-            player.dir = dir;
-        }
-    }  
     
     private void createProjectile(Set<Projectile> newproj) {
         if (newproj == null) {
@@ -150,31 +141,6 @@ public class GameServer extends WebSocketServer {
                     }
                     opp.stun_time = swp.stun_time;
                 }
-            }
-        }
-    }
-
-    private void projectileCollisions(WebSocket ws) {
-        Player pl = players.get(ws);
-        if (pl == null) return;
-        for (Projectile proj : projectiles) {
-            if (!proj.hitPlayers.contains(pl.id) && pl.collision(proj)) {
-                if (pl.invincible_time == 0) {
-                    pl.health -= proj.damage;
-                    //blood class shit
-                    if (pl.frenzy_time > 0) {
-                        pl.health -= proj.damage * 0.5;
-                    }
-                }
-                proj.hitPlayers.add(pl.id);
-                if (pl.health <= 0.0) {
-                    players.remove(ws);
-                    return;
-                }
-                //check projectile effects
-                pl.slow = proj.slow;
-                pl.slow_time = proj.slow_time;
-                pl.stun_time = proj.stun_time;
             }
         }
     }
@@ -275,18 +241,92 @@ public class GameServer extends WebSocketServer {
         }
     }
 
+    private void handleMovement(WebSocket ws, JsonNode jsonNode) {
+        if (jsonNode.get("x") == null || jsonNode.get("x").isNull()) return;
+        if (jsonNode.get("y") == null || jsonNode.get("y").isNull()) return;
+        if (jsonNode.get("dir") == null || jsonNode.get("dir").isNull()) return;
+        double x = jsonNode.get("x").asDouble(); // x component
+        double y = jsonNode.get("y").asDouble(); // y component
+        double dir = jsonNode.get("dir").asDouble(); // mouse direction
+
+        Player player = players.get(ws);
+        if (player != null) {
+            player.updateVelocity(x, y);
+            player.last_dir = player.dir;
+            player.dir = dir;
+        }
+    }  
+
+    private void playerProjectileCollisions(WebSocket ws) {
+        Player pl = players.get(ws);
+        if (pl == null) return;
+        for (Projectile proj : projectiles) {
+            if (!proj.hitPlayers.contains(pl.id) && pl.collision(proj)) {
+                if (pl.invincible_time == 0) {
+                    pl.health -= proj.damage;
+                    //blood class shit
+                    if (pl.frenzy_time > 0) {
+                        pl.health -= proj.damage * 0.5;
+                    }
+                }
+                proj.hitPlayers.add(pl.id);
+                if (pl.health <= 0.0) {
+                    players.remove(ws);
+                    return;
+                }
+                //cluster fireball shit????
+                if (proj.type.equals("clusterfireball")) {
+                    proj.time = 0;
+                }
+                //check projectile effects
+                pl.slow = proj.slow;
+                pl.slow_time = proj.slow_time;
+                pl.stun_time = proj.stun_time;
+            }
+        }
+    }
+
+    private void projectileObstacleCollisions(Projectile proj) {
+        if (proj == null) return;
+        if (proj.type.equals("snowstorm") || proj.type.equals("shockwave")) return;
+        for (Obstacle ob : obstacles) {
+            if (proj.collision(ob)) {
+                if (proj.type.equals("iceblade")) {
+                    if (proj.time > 47) {
+                        proj.time = 47;
+                    }
+                } else {
+                    proj.time = 0;
+                }
+            }
+        }
+    }
+
+    private void playerObstacleCollisions(WebSocket ws) {
+        Player pl = players.get(ws);
+        if (pl == null) return;
+        for (Obstacle ob : obstacles) {
+            if (pl.collision(ob)) {
+                pl.obstacleCollision(ob);
+            }
+        }
+    }
+
     private void update() {
         for (WebSocket ws : players.keySet()) {
             players.get(ws).update();
-            projectileCollisions(ws);
+            playerProjectileCollisions(ws);
+            playerObstacleCollisions(ws);
         }
         for (Projectile p : projectiles) {
+            projectileObstacleCollisions(p);
             p.update();
-            if (p.time == 0) {
+            if (p.time <= 0) {
                 //cluster shot case
                 if (p.type.equals("clusterfireball")) {
                     for (int i = 0; i < 8; i++) {
-                        projectiles.add(new Fireball(UUID.randomUUID().toString(), p.x, p.y, i*Math.PI/4, p.playerID));
+                        double angle = i*Math.PI/4;
+                        projectiles.add(new Fireball(UUID.randomUUID().toString(), p.x+40*Math.cos(angle), p.y+40*Math.sin(angle), angle, p.playerID));
                     }
                 }
                 projectiles.remove(p);
@@ -340,9 +380,26 @@ public class GameServer extends WebSocketServer {
         broadcast(msg);
     }
 
+    private void broadcastObstacleData() {
+        ObjectNode resp = objectMapper.createObjectNode();
+        resp.put("type", "obstacles");
+        resp.set("obstacles", objectMapper.valueToTree(
+            obstacles.stream().map(ob -> 
+                Map.of(
+                    "id", ob.id, 
+                    "x", ob.x, 
+                    "y", ob.y,
+                    "radius", ob.radius)).toList()));
+        String msg = resp.toString();
+        broadcast(msg);
+    }
+
     // classic java...
     public static void main(String[] args) {
         GameServer server = new GameServer();
+        server.obstacles.add(new Obstacle("0", 200,100,40));
+        server.obstacles.add(new Obstacle("1", 700,700,40));
+        server.obstacles.add(new Obstacle("2", 900,400,70));
         server.start();
 
         System.out.println("ws server running on ws://localhost:{port}");

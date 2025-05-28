@@ -7,7 +7,7 @@ public class IceBlade extends Projectile {
         super(id, x_pos, y_pos, 50.0*Math.cos(dir), 50.0*Math.sin(dir), 50.0, pl_id);
         this.time = 50;
         this.radius = 50.0;
-        this.damage = 30.0;
+        this.damage = 20.0;
         this.slow = 0.2;
         this.slow_time = 10;
         this.type = "iceblade";

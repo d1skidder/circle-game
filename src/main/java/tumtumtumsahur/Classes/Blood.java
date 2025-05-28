@@ -59,7 +59,7 @@ public class Blood extends Player {
         if (mana <= manacost || skill2cd > 0) {
             return null;
         }
-        skill2cd += 70;
+        skill3cd += 70;
         frenzy_time = 50;
         mana -= manacost;
         return null;

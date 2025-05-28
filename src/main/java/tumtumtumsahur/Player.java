@@ -106,4 +106,14 @@ public abstract class Player extends Circle {
         }
     }
 
+    public void obstacleCollision(Obstacle ob) {
+        //change position to tangential point
+        double distFromCenter = Math.hypot(x-ob.x, y-ob.y);
+        double scale = (ob.radius+radius)/distFromCenter;
+        double new_x = ob.x+(x-ob.x)*scale;
+        double new_y = ob.y+(y-ob.y)*scale;
+        x = new_x;
+        y = new_y;
+    }
+
 }

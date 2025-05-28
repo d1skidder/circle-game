@@ -28,7 +28,7 @@ public class Circle {
         double stepx = (ref.x-ref.last_x)/stepcount;
         double stepy = (ref.y-ref.last_y)/stepcount;
         for (int i = 1; i <= stepcount; i++) {
-            if (Math.hypot(ref.last_x+stepx*i-x,ref.last_y+stepy*i-y) <= radius+ref.radius) {
+            if (Math.hypot(ref.last_x+stepx*i-x,ref.last_y+stepy*i-y) < radius+ref.radius) {
                 return true;
             }
         }
