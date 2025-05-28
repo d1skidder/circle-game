@@ -56,7 +56,7 @@ public class Blood extends Player {
     //frenzy mode, mode dps/lifesteal but take more damage
     public Set<Projectile>  skill_3 (double dir) {
         double manacost = 40.0;
-        if (mana <= manacost || skill2cd > 0) {
+        if (mana <= manacost || skill3cd > 0) {
             return null;
         }
         skill3cd += 70;
