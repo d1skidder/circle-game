@@ -12,6 +12,10 @@ public class Earth extends Player {
         mana_regen = 2.0;
         health_regen = 0.8;
         this.gameClass = "earth";
+
+        this.skill1maxcd = 30;
+        this.skill2maxcd = 30;
+        this.skill3maxcd = 70;
     }
 
      //enhanced melee attack
@@ -21,7 +25,7 @@ public class Earth extends Player {
         if (basicEnhanced) {
             Sweep res = new Sweep(this.x, this.y, dir, 100.0, Math.PI*1.2, 40.0);
             res.stun_time = 10;
-            skill1cd = 50;
+            skill1cd = skill1maxcd;
             basicEnhanced = false;
             return res;
         }
@@ -34,7 +38,6 @@ public class Earth extends Player {
         if (mana <= manacost || skill1cd > 0) {
             return null;
         }
-        skill1cd = 30;
         mana -= manacost;
         basicEnhanced = true;
         return null;
@@ -46,7 +49,7 @@ public class Earth extends Player {
         if (mana <= manacost || skill2cd > 0) {
             return null;
         }
-        skill2cd += 5;
+        skill2cd = skill2maxcd;
         mana -= manacost;
         String projectileId = UUID.randomUUID().toString();
         return new HashSet<Projectile> (Arrays.asList(new Shockwave(projectileId, this.x, this.y, dir, this.id)));
@@ -58,7 +61,7 @@ public class Earth extends Player {
         if (mana <= manacost || skill3cd > 0) {
             return null;
         }
-        skill3cd += 70;
+        skill3cd = skill3maxcd;
         mana -= manacost;
         this.invincible_time = 20;
         return null;

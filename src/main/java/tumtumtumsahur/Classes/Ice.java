@@ -12,6 +12,10 @@ public class Ice extends Player {
         mana_regen = 2.0;
         health_regen = 0.5;
         this.gameClass = "ice";
+
+        this.skill1maxcd = 10;
+        this.skill2maxcd = 50;
+        this.skill3maxcd = 70;
     }
 
     //triple icicle shot
@@ -20,7 +24,7 @@ public class Ice extends Player {
         if (mana <= manacost || skill1cd > 0) {
             return null;
         }
-        skill1cd = 10;
+        skill1cd = skill1maxcd;
         mana -= manacost;
         Set<Projectile> res = new HashSet<Projectile> ();
         for (int i = -1; i <= 1; i++) {
@@ -35,7 +39,7 @@ public class Ice extends Player {
         if (mana <= manacost || skill2cd > 0) {
             return null;
         }
-        skill2cd = 50;
+        skill2cd = skill2maxcd;
         mana -= manacost;
         String projectileId = UUID.randomUUID().toString();
         return new HashSet<Projectile> (Arrays.asList(new IceBlade(projectileId, this.x, this.y, dir, this.id)));
@@ -47,7 +51,7 @@ public class Ice extends Player {
         if (mana <= manacost || skill3cd > 0) {
             return null;
         }
-        skill3cd = 70;
+        skill3cd = skill3maxcd;
         mana -= manacost;
         String projectileId = UUID.randomUUID().toString();
         return new HashSet<Projectile> (Arrays.asList(new SnowStorm(projectileId, this.x, this.y, dir, this.id)));

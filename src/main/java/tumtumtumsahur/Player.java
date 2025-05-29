@@ -20,6 +20,9 @@ public abstract class Player extends Circle {
     public int skill1cd = 0;
     public int skill2cd = 0;
     public int skill3cd = 0;
+    public int skill1maxcd;
+    public int skill2maxcd;
+    public int skill3maxcd;
     public int basicMeleeCD = 0;
     public int slow_time = 0;
     public int stun_time = 0;
@@ -71,6 +74,20 @@ public abstract class Player extends Circle {
             this.y_vel = 0;
         }
         super.update();
+        //map bounds
+        if (x >= 4000) {
+            x = 4000;
+        }
+        if (x <= 0) {
+            x = 0;
+        }
+        if (y >= 4000) {
+            y = 4000;
+        }
+        if (y <= 0) {
+            y = 0;
+        }
+        //stat updates
         if (mana < 100.0) {
             mana = Math.min(100.0, mana+mana_regen);
         }

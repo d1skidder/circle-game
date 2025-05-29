@@ -12,6 +12,10 @@ public class Blood extends Player {
         mana_regen = 2.0;
         health_regen = 1.0;
         this.gameClass = "blood";
+        
+        this.skill1maxcd = 10;
+        this.skill2maxcd = 5;
+        this.skill3maxcd = 70;
     }
 
     //enhanced melee attack
@@ -31,7 +35,7 @@ public class Blood extends Player {
         if (mana <= manacost || skill1cd > 0) {
             return null;
         }
-        skill1cd = 10;
+        skill1cd = skill1maxcd;
         mana -= manacost;
         Set<Projectile> res = new HashSet<Projectile>();
         for (int i = 0; i < 13; i++) {
@@ -46,7 +50,7 @@ public class Blood extends Player {
         if (mana <= manacost || skill2cd > 0) {
             return null;
         }
-        skill2cd = 5;
+        skill2cd = skill2maxcd;
         mana -= manacost;
         this.x += 50*Math.cos(dir);
         this.y += 50*Math.sin(dir);
@@ -59,7 +63,7 @@ public class Blood extends Player {
         if (mana <= manacost || skill3cd > 0) {
             return null;
         }
-        skill3cd = 70;
+        skill3cd = skill3maxcd;
         frenzy_time = 50;
         mana -= manacost;
         return null;

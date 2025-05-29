@@ -12,6 +12,10 @@ public class Fire extends Player {
         mana_regen = 2.0;
         health_regen = 0.5;
         this.gameClass = "fire";
+
+        this.skill1maxcd = 2;
+        this.skill2maxcd = 5;
+        this.skill3maxcd = 50;
     }
     
 
@@ -21,7 +25,7 @@ public class Fire extends Player {
         if (mana <= manacost || skill1cd > 0) {
             return null;
         }
-        skill1cd += 2;
+        skill1cd = skill1maxcd;
         mana -= manacost;
         String projectileId = UUID.randomUUID().toString();
         return new HashSet<Projectile> (Arrays.asList(new Fireball(projectileId, this.x, this.y, dir, this.id)));
@@ -33,7 +37,7 @@ public class Fire extends Player {
         if (mana <= manacost || skill2cd > 0) {
             return null;
         }
-        skill2cd += 5;
+        skill2cd = skill2maxcd;
         mana -= manacost;
         String projectileId = UUID.randomUUID().toString();
         return new HashSet<Projectile> (Arrays.asList(new ChonkyFireball(projectileId, this.x, this.y, dir, this.id)));
@@ -45,7 +49,7 @@ public class Fire extends Player {
         if (mana <= manacost || skill3cd > 0) {
             return null;
         }
-        skill3cd += 5;
+        skill3cd = skill3maxcd;
         mana -= manacost;
         String projectileId = UUID.randomUUID().toString();
         return new HashSet<Projectile> (Arrays.asList(new ClusterFireball(projectileId, this.x, this.y, dir, this.id)));

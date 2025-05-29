@@ -57,21 +57,23 @@ public class GameServer extends WebSocketServer {
         String gameClass = jsonNode.get("class").asText();
         String playerID = UUID.randomUUID().toString();
         Player player;
+        int locx = (int)(Math.random()*4000);
+        int locy = (int)(Math.random()*4000);
         switch (gameClass) {
             case "fire":
-                player = new Fire(playerID, name, 0, 0);
+                player = new Fire(playerID, name, locx, locy);
                 players.put(ws, player);
                 break;
             case "ice":
-                player = new Ice(playerID, name, 0, 0);
+                player = new Ice(playerID, name, locx, locy);
                 players.put(ws, player);
                 break;
             case "earth":
-                player = new Earth(playerID, name, 0, 0);
+                player = new Earth(playerID, name, locx, locy);
                 players.put(ws, player);
                 break;
             case "blood":
-                player = new Blood(playerID, name, 0, 0);
+                player = new Blood(playerID, name, locx, locy);
                 players.put(ws, player);
                 break;
             default:
@@ -350,11 +352,16 @@ public class GameServer extends WebSocketServer {
                     Map.entry("last_dir", pl.last_dir),
                     Map.entry("health", pl.health),
                     Map.entry("mana", pl.mana),
-                    Map.entry("isHitting", pl.isHitting),
-                    Map.entry("basicEnhanced", pl.basicEnhanced),
                     Map.entry("timeFromLastHit", pl.timeFromLastHit),
+                    //player states
+                    Map.entry("basicEnhanced", pl.basicEnhanced),
                     Map.entry("isInvincible", (pl.invincible_time>0)),
-                    Map.entry("isFrenzy", (pl.frenzy_time>0))
+                    Map.entry("isFrenzy", (pl.frenzy_time>0)),
+                    Map.entry("isHitting", pl.isHitting),
+                    //skill cooldowns
+                    Map.entry("skill1cd", ((double)pl.skill1cd/pl.skill1maxcd)),
+                    Map.entry("skill2cd", ((double)pl.skill2cd/pl.skill2maxcd)),
+                    Map.entry("skill3cd", ((double)pl.skill3cd/pl.skill3maxcd))
                 )
             ).toList()
         ));
@@ -399,9 +406,9 @@ public class GameServer extends WebSocketServer {
     // classic java...
     public static void main(String[] args) {
         GameServer server = new GameServer();
-        server.obstacles.add(new Obstacle("0", 200,100,40));
-        server.obstacles.add(new Obstacle("1", 700,700,40));
-        server.obstacles.add(new Obstacle("2", 900,400,70));
+        for (int i = 0; i < 40; i++) {
+            server.obstacles.add(new Obstacle(i+"", Math.random()*4000,Math.random()*4000,40 + Math.random()*40));
+        }
         server.start();
 
         System.out.println("ws server running on ws://localhost:{port}");
