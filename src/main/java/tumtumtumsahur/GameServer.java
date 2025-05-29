@@ -352,6 +352,7 @@ public class GameServer extends WebSocketServer {
                     Map.entry("last_dir", pl.last_dir),
                     Map.entry("health", pl.health),
                     Map.entry("mana", pl.mana),
+                    Map.entry("gameClass", pl.gameClass),
                     Map.entry("timeFromLastHit", pl.timeFromLastHit),
                     //player states
                     Map.entry("basicEnhanced", pl.basicEnhanced),
@@ -406,7 +407,7 @@ public class GameServer extends WebSocketServer {
     // classic java...
     public static void main(String[] args) {
         GameServer server = new GameServer();
-        for (int i = 0; i < 40; i++) {
+        for (int i = 0; i < 30; i++) {
             server.obstacles.add(new Obstacle(i+"", Math.random()*4000,Math.random()*4000,40 + Math.random()*40));
         }
         server.start();
