@@ -35,7 +35,7 @@ public class GameServer extends WebSocketServer {
 
     private static int getEnvPort() {
         String portEnv = System.getenv("PORT");
-        return portEnv != null ? Integer.parseInt(portEnv) : 3000;
+        return portEnv != null ? Integer.parseInt(portEnv) : 4269;
     }
 
     @Override
