@@ -122,7 +122,7 @@ public class GameServer extends WebSocketServer {
     
                         //blood class shit
                         if (opp.frenzy_time > 0) {
-                            opp.health -= swp.damage * 0.5;
+                            opp.health -= swp.damage * 0.3;
                         }
                         if (pl.gameClass.equals("blood")) {
                             pl.health = Math.min(100.0, pl.health+10);
@@ -262,7 +262,7 @@ public class GameServer extends WebSocketServer {
                     pl.health -= proj.damage;
                     //blood class shit
                     if (pl.frenzy_time > 0) {
-                        pl.health -= proj.damage * 0.5;
+                        pl.health -= proj.damage * 0.3;
                     }
                 }
                 proj.hitPlayers.add(pl.id);

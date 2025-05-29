@@ -46,7 +46,7 @@ public class Blood extends Player {
         if (mana <= manacost || skill2cd > 0) {
             return null;
         }
-        skill2cd = 10;
+        skill2cd = 5;
         mana -= manacost;
         this.x += 50*Math.cos(dir);
         this.y += 50*Math.sin(dir);
