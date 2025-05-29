@@ -322,7 +322,11 @@ public class GameServer extends WebSocketServer {
                 if (p.type.equals("clusterfireball")) {
                     for (int i = 0; i < 8; i++) {
                         double angle = i*Math.PI/4;
-                        projectiles.add(new Fireball(UUID.randomUUID().toString(), p.x+40*Math.cos(angle), p.y+40*Math.sin(angle), angle, p.playerID));
+                        Projectile newproj = new Fireball(UUID.randomUUID().toString(), p.x+20*Math.cos(angle), p.y+20*Math.sin(angle), angle, p.playerID);
+                        for (String id : p.hitPlayers) {
+                            newproj.hitPlayers.add(id);
+                        }
+                        projectiles.add(newproj);
                     }
                 }
                 projectiles.remove(p);
