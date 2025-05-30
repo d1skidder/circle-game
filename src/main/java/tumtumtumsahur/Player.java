@@ -98,6 +98,9 @@ public abstract class Player extends Circle {
         if (isHitting && System.currentTimeMillis() - timeFromLastHit >= 400) {
             isHitting = false;
         }  
+        if(chat != null && System.currentTimeMillis() - timeFromLastChat >= 3000) {
+            chat = null;
+        }
         if (health < 100.0) {
             health = Math.min(100.0, health+health_regen);
         }
