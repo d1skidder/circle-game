@@ -359,9 +359,9 @@ public class GameServer extends WebSocketServer {
                     Map.entry("isFrenzy", (pl.frenzy_time>0)),
                     Map.entry("isHitting", pl.isHitting),
                     //skill cooldowns
-                    Map.entry("skill1cd", ((double)(pl.skill1cd-1)/(pl.skill1maxcd-1))),
-                    Map.entry("skill2cd", ((double)(pl.skill2cd-1)/(pl.skill2maxcd-1))),
-                    Map.entry("skill3cd", ((double)(pl.skill3cd-1)/(pl.skill3maxcd-1))),
+                    Map.entry("skill1cd", ((double)(pl.skill1cd/pl.skill1maxcd)),
+                    Map.entry("skill2cd", ((double)pl.skill2cd/pl.skill2maxcd)),
+                    Map.entry("skill3cd", ((double)pl.skill3cd/pl.skill3maxcd)),
                     //killcount
                     Map.entry("killcount", pl.killcount)
                 )
