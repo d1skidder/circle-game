@@ -121,7 +121,7 @@ public class GameServer extends WebSocketServer {
                 if (opp.id != pl.id && swp.collision(opp)) {
                     if (opp.invincible_time == 0) {
                         opp.health -= swp.damage;
-    
+                        opp.stun_time = swp.stun_time;
                         //blood class shit
                         if (opp.frenzy_time > 0) {
                             opp.health -= swp.damage * 0.3;
@@ -138,7 +138,6 @@ public class GameServer extends WebSocketServer {
                         players.remove(oppws);
                         return;
                     }
-                    opp.stun_time = swp.stun_time;
                 }
             }
         }
@@ -264,6 +263,10 @@ public class GameServer extends WebSocketServer {
                     if (pl.frenzy_time > 0) {
                         pl.health -= proj.damage * 0.3;
                     }
+                    //check projectile effects
+                    pl.slow = proj.slow;
+                    pl.slow_time = proj.slow_time;
+                    pl.stun_time = proj.stun_time;
                 }
                 proj.hitPlayers.add(pl.id);
                 if (pl.health <= 0.0) {
@@ -275,10 +278,6 @@ public class GameServer extends WebSocketServer {
                 if (proj.type.equals("clusterfireball")) {
                     proj.time = 0;
                 }
-                //check projectile effects
-                pl.slow = proj.slow;
-                pl.slow_time = proj.slow_time;
-                pl.stun_time = proj.stun_time;
             }
         }
     }
