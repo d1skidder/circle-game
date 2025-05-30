@@ -362,11 +362,13 @@ public class GameServer extends WebSocketServer {
                     Map.entry("mana", pl.mana),
                     Map.entry("gameClass", pl.gameClass),
                     Map.entry("timeFromLastHit", pl.timeFromLastHit),
+                    Map.entry("timeFromLastChat", pl.timeFromLastChat),
                     //player states
                     Map.entry("basicEnhanced", pl.basicEnhanced),
                     Map.entry("isInvincible", (pl.invincible_time>0)),
                     Map.entry("isFrenzy", (pl.frenzy_time>0)),
                     Map.entry("isHitting", pl.isHitting),
+                    Map.entry("chat", pl.chat),
                     //skill cooldowns
                     Map.entry("skill1cd", ((double)pl.skill1cd/pl.skill1maxcd)),
                     Map.entry("skill2cd", ((double)pl.skill2cd/pl.skill2maxcd)),
