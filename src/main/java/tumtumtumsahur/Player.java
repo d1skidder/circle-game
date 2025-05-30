@@ -16,7 +16,7 @@ public abstract class Player extends Circle {
     public boolean isHitting = false;
     public double slow;
     public String chat = null;
-    public timeFromLastChat;
+    public double timeFromLastChat;
 
     //timers
     public int skill1cd = 0;
