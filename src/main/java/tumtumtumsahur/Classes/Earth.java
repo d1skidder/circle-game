@@ -52,7 +52,7 @@ public class Earth extends Player {
         skill2cd = skill2maxcd;
         mana -= manacost;
         String projectileId = UUID.randomUUID().toString();
-        return new HashSet<Projectile> (Arrays.asList(new Shockwave(projectileId, this.x, this.y, dir, this.id)));
+        return new HashSet<Projectile> (Arrays.asList(new Shockwave(projectileId, this.x, this.y, dir, this)));
     }
 
     //temporary invincible

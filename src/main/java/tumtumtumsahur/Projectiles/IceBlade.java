@@ -1,10 +1,10 @@
 package tumtumtumsahur.Projectiles;
 
-import tumtumtumsahur.Projectile;
+import tumtumtumsahur.*;
 
 public class IceBlade extends Projectile {
-    public IceBlade(String id, double x_pos, double y_pos, double dir, String pl_id) {
-        super(id, x_pos, y_pos, 50.0*Math.cos(dir), 50.0*Math.sin(dir), 50.0, pl_id);
+    public IceBlade(String id, double x_pos, double y_pos, double dir, Player pl) {
+        super(id, x_pos, y_pos, 50.0*Math.cos(dir), 50.0*Math.sin(dir), 50.0, pl);
         this.time = 50;
         this.radius = 50.0;
         this.damage = 20.0;
@@ -18,7 +18,7 @@ public class IceBlade extends Projectile {
             this.x_vel = 0.0; this.y_vel = 0.0;
             if (this.time % 5 == 0) {
                 this.hitPlayers.clear();
-                this.hitPlayers.add(this.playerID);
+                this.hitPlayers.add(this.myPlayer.id);
             }
         }
         super.update();

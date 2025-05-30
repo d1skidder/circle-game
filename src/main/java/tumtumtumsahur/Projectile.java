@@ -5,7 +5,7 @@ public abstract class Projectile extends Circle {
     public int time;
     public double damage;
     public Set<String> hitPlayers;
-    public String playerID;
+    public Player myPlayer;
     public String type;
 
     //slow effect
@@ -13,12 +13,12 @@ public abstract class Projectile extends Circle {
     public int slow_time = 0;
     public int stun_time = 0;
 
-    public Projectile(String id, double x, double y, double x_vel, double y_vel, double vel, String pl_id) {
+    public Projectile(String id, double x, double y, double x_vel, double y_vel, double vel, Player pl) {
         super(id, x, y);
         hitPlayers = new HashSet<String>();
-        playerID = pl_id;
+        myPlayer = pl;
         max_vel = vel;
-        hitPlayers.add(pl_id);
+        hitPlayers.add(pl.id);
         updateVelocity(x_vel, y_vel);
     }
 

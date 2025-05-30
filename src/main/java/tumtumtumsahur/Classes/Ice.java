@@ -28,7 +28,7 @@ public class Ice extends Player {
         mana -= manacost;
         Set<Projectile> res = new HashSet<Projectile> ();
         for (int i = -1; i <= 1; i++) {
-            res.add(new Icicle(UUID.randomUUID().toString(),x,y,dir+i*Math.PI/12, this.id)); 
+            res.add(new Icicle(UUID.randomUUID().toString(),x,y,dir+i*Math.PI/12, this)); 
         }
         return res;
     }
@@ -42,7 +42,7 @@ public class Ice extends Player {
         skill2cd = skill2maxcd;
         mana -= manacost;
         String projectileId = UUID.randomUUID().toString();
-        return new HashSet<Projectile> (Arrays.asList(new IceBlade(projectileId, this.x, this.y, dir, this.id)));
+        return new HashSet<Projectile> (Arrays.asList(new IceBlade(projectileId, this.x, this.y, dir, this)));
     }
 
     //snowstorm
@@ -54,7 +54,7 @@ public class Ice extends Player {
         skill3cd = skill3maxcd;
         mana -= manacost;
         String projectileId = UUID.randomUUID().toString();
-        return new HashSet<Projectile> (Arrays.asList(new SnowStorm(projectileId, this.x, this.y, dir, this.id)));
+        return new HashSet<Projectile> (Arrays.asList(new SnowStorm(projectileId, this.x, this.y, dir, this)));
     }
 
 }

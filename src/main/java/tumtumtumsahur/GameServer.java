@@ -134,6 +134,7 @@ public class GameServer extends WebSocketServer {
                         }
                     }
                     if (opp.health <= 0.0) {
+                        pl.killcount++;
                         players.remove(oppws);
                         return;
                     }
@@ -149,10 +150,7 @@ public class GameServer extends WebSocketServer {
 
         String move = jsonNode.get("move").asText(); //which attack is being used
         double dir = jsonNode.get("dir").asDouble(); // mouse direction
-        double time = 0; //get time
-        if (jsonNode.get("time") != null) {
-            time = jsonNode.get("time").asDouble();
-        }
+        double time = System.currentTimeMillis();
 
         Player pl = players.get(ws);
         if (pl == null) return;
@@ -269,6 +267,7 @@ public class GameServer extends WebSocketServer {
                 }
                 proj.hitPlayers.add(pl.id);
                 if (pl.health <= 0.0) {
+                    proj.myPlayer.killcount++;
                     players.remove(ws);
                     return;
                 }
@@ -324,7 +323,7 @@ public class GameServer extends WebSocketServer {
                 if (p.type.equals("clusterfireball")) {
                     for (int i = 0; i < 8; i++) {
                         double angle = i*Math.PI/4;
-                        Projectile newproj = new Fireball(UUID.randomUUID().toString(), p.x+20*Math.cos(angle), p.y+20*Math.sin(angle), angle, p.playerID);
+                        Projectile newproj = new Fireball(UUID.randomUUID().toString(), p.x+40*Math.cos(angle), p.y+40*Math.sin(angle), angle, p.myPlayer);
                         for (String id : p.hitPlayers) {
                             newproj.hitPlayers.add(id);
                         }
@@ -362,7 +361,9 @@ public class GameServer extends WebSocketServer {
                     //skill cooldowns
                     Map.entry("skill1cd", ((double)pl.skill1cd/pl.skill1maxcd)),
                     Map.entry("skill2cd", ((double)pl.skill2cd/pl.skill2maxcd)),
-                    Map.entry("skill3cd", ((double)pl.skill3cd/pl.skill3maxcd))
+                    Map.entry("skill3cd", ((double)pl.skill3cd/pl.skill3maxcd)),
+                    //killcount
+                    Map.entry("killcount", pl.killcount)
                 )
             ).toList()
         ));
@@ -408,7 +409,7 @@ public class GameServer extends WebSocketServer {
     public static void main(String[] args) {
         GameServer server = new GameServer();
         for (int i = 0; i < 30; i++) {
-            server.obstacles.add(new Obstacle(i+"", Math.random()*4000,Math.random()*4000,40 + Math.random()*40));
+            server.obstacles.add(new Obstacle(i+"", Math.random()*4000,Math.random()*4000,30 + Math.random()*40));
         }
         server.start();
 

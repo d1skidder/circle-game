@@ -39,7 +39,7 @@ public class Blood extends Player {
         mana -= manacost;
         Set<Projectile> res = new HashSet<Projectile>();
         for (int i = 0; i < 13; i++) {
-            res.add(new BloodBlade(UUID.randomUUID().toString(), x, y, i*2*Math.PI/13, id));
+            res.add(new BloodBlade(UUID.randomUUID().toString(), x, y, i*2*Math.PI/13, this));
         }
         return res;
     }
@@ -52,8 +52,8 @@ public class Blood extends Player {
         }
         skill2cd = skill2maxcd;
         mana -= manacost;
-        this.x += 50*Math.cos(dir);
-        this.y += 50*Math.sin(dir);
+        this.x += 70*Math.cos(dir);
+        this.y += 70*Math.sin(dir);
         return null;
     }
 

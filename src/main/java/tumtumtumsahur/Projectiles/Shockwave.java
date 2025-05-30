@@ -1,10 +1,10 @@
 package tumtumtumsahur.Projectiles;
 
-import tumtumtumsahur.Projectile;
+import tumtumtumsahur.*;
 
 public class Shockwave extends Projectile {
-    public Shockwave(String id, double x_pos, double y_pos, double dir, String pl_id) {
-        super(id, x_pos, y_pos, 0, 0, 0, pl_id);
+    public Shockwave(String id, double x_pos, double y_pos, double dir, Player pl) {
+        super(id, x_pos, y_pos, 0, 0, 0, pl);
         this.time = 4;
         this.radius = 100.0;
         this.damage = 10.0;

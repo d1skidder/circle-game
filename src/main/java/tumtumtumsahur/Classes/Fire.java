@@ -28,7 +28,7 @@ public class Fire extends Player {
         skill1cd = skill1maxcd;
         mana -= manacost;
         String projectileId = UUID.randomUUID().toString();
-        return new HashSet<Projectile> (Arrays.asList(new Fireball(projectileId, this.x, this.y, dir, this.id)));
+        return new HashSet<Projectile> (Arrays.asList(new Fireball(projectileId, this.x, this.y, dir, this)));
     }
 
     //larger fireball
@@ -40,7 +40,7 @@ public class Fire extends Player {
         skill2cd = skill2maxcd;
         mana -= manacost;
         String projectileId = UUID.randomUUID().toString();
-        return new HashSet<Projectile> (Arrays.asList(new ChonkyFireball(projectileId, this.x, this.y, dir, this.id)));
+        return new HashSet<Projectile> (Arrays.asList(new ChonkyFireball(projectileId, this.x, this.y, dir, this)));
     }
 
     //big slow cluster fireball
@@ -52,7 +52,7 @@ public class Fire extends Player {
         skill3cd = skill3maxcd;
         mana -= manacost;
         String projectileId = UUID.randomUUID().toString();
-        return new HashSet<Projectile> (Arrays.asList(new ClusterFireball(projectileId, this.x, this.y, dir, this.id)));
+        return new HashSet<Projectile> (Arrays.asList(new ClusterFireball(projectileId, this.x, this.y, dir, this)));
     }
 
 }

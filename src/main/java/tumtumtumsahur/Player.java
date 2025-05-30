@@ -29,6 +29,8 @@ public abstract class Player extends Circle {
     public int invincible_time = 0;
     public int frenzy_time = 0;
 
+    public int killcount = 0;
+
     //earth class shenanigans
     public boolean basicEnhanced = false;
 
