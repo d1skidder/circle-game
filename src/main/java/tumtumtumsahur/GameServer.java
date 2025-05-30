@@ -51,6 +51,13 @@ public class GameServer extends WebSocketServer {
             }
         }, 0, 100);
     }
+    private void handleChat(WebSocket ws, JsonNode jsonNode) {
+        String message = jsonNode.has("message") ? jsonNode.get("message").asText() : null;
+        double timeT = jsonNode.has("time") ? jsonNode.get("time").asText() : null;
+        Player pl = players.get(ws);
+        pl.chat = message;
+        pl.timeFromLastChat = timeT;
+    }
 
     private void handleJoin(WebSocket ws, JsonNode jsonNode) {
         String name = jsonNode.has("name") ? jsonNode.get("name").asText() : "unnamed";
@@ -182,6 +189,9 @@ public class GameServer extends WebSocketServer {
 
             // wtf this is just js on steroids
             switch (type) {
+                case "chat":
+                    handleChat(ws, jsonNode);
+                    break;
                 case "join":
                     handleJoin(ws, jsonNode);
                     break;
