@@ -52,11 +52,13 @@ public class GameServer extends WebSocketServer {
         }, 0, 100);
     }
     private void handleChat(WebSocket ws, JsonNode jsonNode) {
-        String message = jsonNode.has("message") ? jsonNode.get("message").asText() : null;
-        double timeT = jsonNode.get("time").asDouble();
+        if (jsonNode.get("message") == null || jsonNode.get("message").isNull()) return;
+        if (jsonNode.get("time") == null || jsonNode.get("time").isNull()) return;
         Player pl = players.get(ws);
+        if(pl == null) return;
+        String message = jsonNode.has("message") ? jsonNode.get("message").asText() : null;
         pl.chat = message;
-        pl.timeFromLastChat = timeT;
+        pl.timeFromLastChat = jsonNode.get("time").asDouble();
     }
 
     private void handleJoin(WebSocket ws, JsonNode jsonNode) {
