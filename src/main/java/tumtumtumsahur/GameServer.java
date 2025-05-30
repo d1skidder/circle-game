@@ -53,7 +53,7 @@ public class GameServer extends WebSocketServer {
     }
     private void handleChat(WebSocket ws, JsonNode jsonNode) {
         String message = jsonNode.has("message") ? jsonNode.get("message").asText() : null;
-        double timeT = jsonNode.has("time") ? jsonNode.get("time").asText() : null;
+        double timeT = jsonNode.has("time") ? jsonNode.get("time").isNull() : null;
         Player pl = players.get(ws);
         pl.chat = message;
         pl.timeFromLastChat = timeT;
