@@ -17,8 +17,8 @@ public class Earth extends Player {
         this.gameClass = "earth";
 
         this.skill1maxcd = 30;
-        this.skill2maxcd = 30;
-        this.skill3maxcd = 90;
+        this.skill2maxcd = 50;
+        this.skill3maxcd = 120;
     }
 
      //enhanced melee attack
