@@ -17,6 +17,8 @@ public abstract class Player extends Circle {
     public double timeFromLastHit;
     public boolean isHitting = false;
     public double slow;
+    public String chat = null;
+    public double timeFromLastChat;
 
     //timers
     public int skill1cd = 0;
@@ -122,6 +124,9 @@ public abstract class Player extends Circle {
         if (isHitting && System.currentTimeMillis() - timeFromLastHit >= 400) {
             isHitting = false;
         }  
+        if(chat != null && System.currentTimeMillis() - timeFromLastChat >= 3000) {
+            chat = null;
+        }
         if (health < 100.0) {
             health = Math.min(100.0, health+health_regen);
         }

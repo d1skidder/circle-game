@@ -56,6 +56,15 @@ public class GameServer extends WebSocketServer {
             }
         }, 0, 100);
     }
+    private void handleChat(WebSocket ws, JsonNode jsonNode) {
+        if (jsonNode.get("message") == null || jsonNode.get("message").isNull()) return;
+        if (jsonNode.get("time") == null || jsonNode.get("time").isNull()) return;
+        Player pl = players.get(ws);
+        if(pl == null) return;
+        String message = jsonNode.has("message") ? jsonNode.get("message").asText() : null;
+        pl.chat = message;
+        pl.timeFromLastChat = jsonNode.get("time").asDouble();
+    }
 
     private void handleJoin(WebSocket ws, JsonNode jsonNode) {
         String name = jsonNode.has("name") ? jsonNode.get("name").asText() : "unnamed";
@@ -179,6 +188,9 @@ public class GameServer extends WebSocketServer {
 
             // wtf this is just js on steroids
             switch (type) {
+                case "chat":
+                    handleChat(ws, jsonNode);
+                    break;
                 case "join":
                     handleJoin(ws, jsonNode);
                     break;
@@ -349,11 +361,13 @@ public class GameServer extends WebSocketServer {
                     Map.entry("mana", pl.mana),
                     Map.entry("gameClass", pl.gameClass),
                     Map.entry("timeFromLastHit", pl.timeFromLastHit),
+                    Map.entry("timeFromLastChat", pl.timeFromLastChat),
                     //player states
                     Map.entry("basicEnhanced", pl.basicEnhanced),
                     Map.entry("isInvincible", (pl.invincible_time>0)),
                     Map.entry("isFrenzy", (pl.frenzy_time>0)),
                     Map.entry("isHitting", pl.isHitting),
+                    Map.entry("chat", pl.chat),
                     //skill cooldowns
                     Map.entry("skill1cd", ((double)pl.skill1cd/pl.skill1maxcd)),
                     Map.entry("skill2cd", ((double)pl.skill2cd/pl.skill2maxcd)),
