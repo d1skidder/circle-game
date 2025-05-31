@@ -4,7 +4,9 @@ import java.util.*;
 
 import tumtumtumsahur.*;
 import tumtumtumsahur.Projectiles.*;
-
+/**
+ * Blood class
+ */
 public class Blood extends Player {
 
     public Blood(String id, String name, double x, double y) {

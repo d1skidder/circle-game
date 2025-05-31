@@ -5,6 +5,9 @@ import java.util.*;
 import tumtumtumsahur.*;
 import tumtumtumsahur.Projectiles.*;
 
+/**
+ * Fire class
+ */
 public class Fire extends Player {
 
     public Fire(String id, String name, double x, double y) {

@@ -1,7 +1,9 @@
 package tumtumtumsahur.Projectiles;
 
 import tumtumtumsahur.*;
-
+/**
+ * cluster fireball that bursts on impact
+ */
 public class ClusterFireball extends Projectile{
 
     public ClusterFireball(String id, double x_pos, double y_pos, double dir, Player pl) {

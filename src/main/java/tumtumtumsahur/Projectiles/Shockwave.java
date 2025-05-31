@@ -1,7 +1,9 @@
 package tumtumtumsahur.Projectiles;
 
 import tumtumtumsahur.*;
-
+/**
+ * shockwave that stuns
+ */
 public class Shockwave extends Projectile {
     public Shockwave(String id, double x_pos, double y_pos, double dir, Player pl) {
         super(id, x_pos, y_pos, 0, 0, 0, pl);

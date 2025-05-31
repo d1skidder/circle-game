@@ -3,7 +3,9 @@ package tumtumtumsahur.Projectiles;
 import java.util.HashSet;
 
 import tumtumtumsahur.*;
-
+/**
+ * bloodblade
+ */
 public class BloodBlade extends Projectile {
 
     public BloodBlade(String id, double x_pos, double y_pos, double dir, Player pl) {

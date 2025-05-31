@@ -1,5 +1,7 @@
 package tumtumtumsahur;
-
+/**
+ * hitbox for melee attack collisions
+ */
 public class Sweep {
     private double radius;
     private double x;
@@ -9,7 +11,15 @@ public class Sweep {
     public double damage;
 
     public int stun_time = 0;
-
+    /**
+     * constructs new Sweep
+     * @param x x position
+     * @param y y position
+     * @param dir direction
+     * @param radius radius of sweep
+     * @param sweep arc of sweep in radians
+     * @param damage damage dealt
+     */
     public Sweep(double x, double y, double dir, double radius, double sweep, double damage) {
         this.x = x;
         this.y = y;

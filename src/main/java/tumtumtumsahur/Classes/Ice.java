@@ -5,6 +5,9 @@ import java.util.*;
 import tumtumtumsahur.*;
 import tumtumtumsahur.Projectiles.*;
 
+/**
+ * Ice class
+ */
 public class Ice extends Player {
 
     public Ice(String id, String name, double x, double y) {

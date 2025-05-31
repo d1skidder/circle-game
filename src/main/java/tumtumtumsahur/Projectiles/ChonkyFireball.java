@@ -1,7 +1,9 @@
 package tumtumtumsahur.Projectiles;
 
 import tumtumtumsahur.*;
-
+/**
+ * larger fireball
+ */
 public class ChonkyFireball extends Projectile {
 
     public ChonkyFireball(String id, double x_pos, double y_pos, double dir, Player pl) {

@@ -15,6 +15,9 @@ import tumtumtumsahur.Projectiles.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Server to run game
+ */
 public class GameServer extends WebSocketServer {
     private final ObjectMapper objectMapper;
     private final Map<WebSocket, Player> players;
@@ -22,7 +25,9 @@ public class GameServer extends WebSocketServer {
     private final Set<Obstacle> obstacles;
     private final Timer gameLoopInterval;
 
-
+    /**
+     * constructs new server
+     */
     public GameServer() {
         super(new InetSocketAddress("0.0.0.0", getEnvPort()));
         //super(new InetSocketAddress("localhost", 8080));
@@ -90,15 +95,7 @@ public class GameServer extends WebSocketServer {
 
     @Override
     public void onOpen(WebSocket ws, ClientHandshake hnsk) {
-        // String playerID = UUID.randomUUID().toString();
-        // System.out.println("Player: " + playerID + " has joined the game");
-        // players.put(ws, new Ice(playerID,"hi", 0, 0));
-
-        // // tell res tof clients new player spawned
-        // ObjectNode response = objectMapper.createObjectNode();
-        // response.put("type", "init");
-        // response.put("id", playerID);
-        // ws.send(response.toString());
+        return;
     }
     
     private void createProjectile(Set<Projectile> newproj) {

@@ -1,7 +1,9 @@
 package tumtumtumsahur.Projectiles;
 
 import tumtumtumsahur.*;
-
+/**
+ * snowstorm that slows over area
+ */
 public class SnowStorm extends Projectile {
     public SnowStorm(String id, double x_pos, double y_pos, double dir, Player pl) {
         super(id, x_pos, y_pos, 0, 0, 0, pl);

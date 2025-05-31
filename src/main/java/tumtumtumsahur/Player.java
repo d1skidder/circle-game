@@ -2,7 +2,9 @@ package tumtumtumsahur;
 
 import java.util.*;
 
-
+/**
+ * Template for player classes
+ */
 public abstract class Player extends Circle {    
     String name; 
     public String gameClass;
@@ -35,7 +37,13 @@ public abstract class Player extends Circle {
     public boolean basicEnhanced = false;
 
 
-    // woah weird ass constructor methods
+    /**
+     * constructs Player
+     * @param id id
+     * @param name player username
+     * @param x x position
+     * @param y y position
+     */
     public Player(String id, String name, double x, double y) {
         super(id, x, y);
         this.name = name;
@@ -44,16 +52,32 @@ public abstract class Player extends Circle {
     }
 
     //if type is projectile return projectile set, if melee return sweep
-    //1st skill
+    /**
+     * player 1st skill
+     * @param dir direction of skill
+     * @return set of generated projectiles
+     */
     public abstract Set<Projectile> skill_1(double dir);
 
-    //2nd skill
+    /**
+     * player 2nd skill
+     * @param dir direction of skill
+     * @return set of generated projectiles
+     */
     public abstract Set<Projectile> skill_2(double dir);
 
-    //3rd skill
+    /**
+     * player 3rd skill
+     * @param dir direction of skill
+     * @return set of generated projectiles
+     */
     public abstract Set<Projectile> skill_3(double dir);
 
-    //Basic melee attack
+    /**
+     * basic attack
+     * @param dir direction of attack
+     * @return generated sweep
+     */
     public Sweep basicMelee(double dir) {
         if (basicMeleeCD > 0) return null;
         this.basicMeleeCD += 8;
@@ -61,7 +85,9 @@ public abstract class Player extends Circle {
     }
 
 
-    //add update all stats by time
+    /**
+     * updates all stats and position
+     */
     public void update() {
         if (this.slow_time > 0) {
             this.x_vel *= slow;

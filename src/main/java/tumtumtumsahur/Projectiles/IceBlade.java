@@ -1,7 +1,9 @@
 package tumtumtumsahur.Projectiles;
 
 import tumtumtumsahur.*;
-
+/**
+ * iceblade lingers/damage over time
+ */
 public class IceBlade extends Projectile {
     public IceBlade(String id, double x_pos, double y_pos, double dir, Player pl) {
         super(id, x_pos, y_pos, 50.0*Math.cos(dir), 50.0*Math.sin(dir), 50.0, pl);

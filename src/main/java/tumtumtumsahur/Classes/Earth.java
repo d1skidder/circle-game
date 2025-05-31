@@ -5,6 +5,9 @@ import java.util.*;
 import tumtumtumsahur.*;
 import tumtumtumsahur.Projectiles.*;
 
+/**
+ * Earth class
+ */
 public class Earth extends Player {
 
     public Earth(String id, String name, double x, double y) {
