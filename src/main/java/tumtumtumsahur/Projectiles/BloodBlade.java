@@ -1,7 +1,5 @@
 package tumtumtumsahur.Projectiles;
 
-import java.util.HashSet;
-
 import tumtumtumsahur.*;
 /**
  * bloodblade

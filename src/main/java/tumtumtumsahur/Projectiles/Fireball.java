@@ -1,6 +1,5 @@
 package tumtumtumsahur.Projectiles;
 
-import java.util.HashSet;
 /**
  * small fireball
  */
