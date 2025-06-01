@@ -37,7 +37,7 @@ public class Circle {
      * @return
      */
     public boolean collision (Circle ref) {
-        int stepcount = 5;
+        int stepcount = 10;
         double stepx = (ref.x-ref.last_x)/stepcount;
         double stepy = (ref.y-ref.last_y)/stepcount;
         for (int i = 1; i <= stepcount; i++) {
