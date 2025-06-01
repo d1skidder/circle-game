@@ -66,7 +66,7 @@ public class GameServer extends WebSocketServer {
         int locy = (int)(Math.random()*4000);
         switch (gameClass) {
             case "fire":
-                player = new Lightning(playerID, name, locx, locy);
+                player = new Fire(playerID, name, locx, locy);
                 players.put(ws, player);
                 break;
             case "ice":
