@@ -41,6 +41,7 @@ public class Lightning extends Player {
         }
         skill1cd = skill1maxcd;
         mana -= manacost;
+        this.stun_time = 5;
         return new HashSet<Projectile> (Arrays.asList(new LightningBall(UUID.randomUUID().toString(), this.x, this.y, dir, this)));
     }
 
@@ -67,6 +68,7 @@ public class Lightning extends Player {
         }
         skill3cd = skill3maxcd;
         mana -= manacost;
+        this.stun_time = 5;
         return new HashSet<Projectile> (Arrays.asList(new LightningBolt(UUID.randomUUID().toString(), this.x, this.y, dir, this)));
 
     }
