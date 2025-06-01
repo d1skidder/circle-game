@@ -16,7 +16,7 @@ public class Lightning extends Player {
         this.gameClass = "lightning";
         
         this.skill1maxcd = 50;
-        this.skill2maxcd = 100;
+        this.skill2maxcd = 150;
         this.skill3maxcd = 50;
     }
 
