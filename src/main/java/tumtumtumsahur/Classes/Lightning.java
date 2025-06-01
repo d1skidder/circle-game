@@ -12,12 +12,12 @@ public class Lightning extends Player {
     public Lightning(String id, String name, double x, double y) {
         super(id,name, x, y);
         mana_regen = 2.0;
-        health_regen = 1.0;
+        health_regen = 0.5;
         this.gameClass = "lightning";
         
-        this.skill1maxcd = 50;
+        this.skill1maxcd = 70;
         this.skill2maxcd = 150;
-        this.skill3maxcd = 50;
+        this.skill3maxcd = 40;
     }
 
     //weakened melee attack
@@ -53,7 +53,7 @@ public class Lightning extends Player {
         }
         skill2cd = skill2maxcd;
         mana -= manacost;
-        this.lightingspeed_time = 20;
+        this.lightingspeed_time = 15;
         return null;
     }
 

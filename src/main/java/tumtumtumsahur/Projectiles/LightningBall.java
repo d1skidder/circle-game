@@ -11,7 +11,7 @@ public class LightningBall extends Projectile {
         this.time = 30;
         this.radius = 30.0;
         this.damage = 30.0;
-        this.stun_time = 20;
+        this.stun_time = 15;
         this.type = "lightningball";
     }
 
