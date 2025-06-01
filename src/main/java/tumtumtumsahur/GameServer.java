@@ -421,7 +421,7 @@ public class GameServer extends WebSocketServer {
     public static void main(String[] args) {
         GameServer server = new GameServer();
         for (int i = 0; i < 30; i++) {
-            server.obstacles.add(new Obstacle(i+"", Math.random()*4000,Math.random()*4000,30 + Math.random()*40));
+            server.obstacles.add(new Obstacle(i+"", Math.random()*4000,Math.random()*4000,40 + Math.random()*40));
         }
         server.start();
 
