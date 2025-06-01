@@ -10,7 +10,7 @@ public class SnowStorm extends Projectile {
         this.time = 50;
         this.radius = 150.0;
         this.damage = 10.0;
-        this.slow = 0.5;
+        this.slow = 0.65;
         this.slow_time = 10;
         this.type = "snowstorm";
     }
