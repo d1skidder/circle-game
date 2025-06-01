@@ -24,7 +24,7 @@ public class Fire extends Player {
 
     //small fireball
     public Set<Projectile> skill_1 (double dir) {
-        double manacost = 10.0;
+        double manacost = 15.0;
         if (mana <= manacost || skill1cd > 0) {
             return null;
         }
