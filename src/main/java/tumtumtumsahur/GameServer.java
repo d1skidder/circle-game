@@ -81,6 +81,10 @@ public class GameServer extends WebSocketServer {
                 player = new Blood(playerID, name, locx, locy);
                 players.put(ws, player);
                 break;
+            case "lightning":
+                player = new Lightning(playerID, name, locx, locy);
+                players.put(ws, player);
+                break;
             default:
                 System.out.println("Error: class " + gameClass + " does not exist");
         }  
@@ -108,6 +112,7 @@ public class GameServer extends WebSocketServer {
     }
 
     private void meleeAttack(Sweep swp, Player pl, double time) {
+        if (pl.lightingspeed_time > 0) return;
         if(pl.isHitting == false) {
             pl.isHitting = true;
             pl.timeFromLastHit = time;

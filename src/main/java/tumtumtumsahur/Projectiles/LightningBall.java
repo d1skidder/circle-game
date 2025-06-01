@@ -7,10 +7,11 @@ import tumtumtumsahur.*;
 
 public class LightningBall extends Projectile {
     public LightningBall(String id, double x_pos, double y_pos, double dir, Player pl) {
-        super(id, x_pos, y_pos, 30.0*Math.cos(dir), 30.0*Math.sin(dir), 30.0, pl);
-        this.time = 50;
+        super(id, x_pos, y_pos, 35.0*Math.cos(dir), 35.0*Math.sin(dir), 35.0, pl);
+        this.time = 30;
         this.radius = 30.0;
         this.damage = 30.0;
+        this.stun_time = 20;
         this.type = "lightningball";
     }
 
@@ -32,7 +33,7 @@ public class LightningBall extends Projectile {
         double dir = Math.atan2(this.y_vel, this.x_vel);
         double targetdir = Math.atan2(closestPlayer.y-this.y, closestPlayer.x-this.x);
         double dirchange = wrapAngle(targetdir-dir);
-        double angular_vel = 0.2;
+        double angular_vel = 0.25;
         dirchange = Math.max(-angular_vel, Math.min(angular_vel, dirchange));
         this.x_vel = (max_vel*Math.cos(dir+dirchange));
         this.y_vel = (max_vel*Math.sin(dir+dirchange));

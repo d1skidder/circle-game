@@ -8,12 +8,12 @@ public class LightningBolt extends Projectile {
         super(id, x_pos, y_pos, 150.0*Math.cos(dir), 150.0*Math.sin(dir), 150.0, pl);
         this.time = 8;
         this.radius = 10.0;
-        this.damage = 10.0;
+        this.damage = 50.0;
         this.type = "lightningbolt";
     }
 
     public void update() {
-        this.damage += 10;
+        this.damage += 5;
         super.update();
     }
 }
