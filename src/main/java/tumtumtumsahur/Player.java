@@ -30,6 +30,7 @@ public abstract class Player extends Circle {
     public int stun_time = 0;
     public int invincible_time = 0;
     public int frenzy_time = 0;
+    public int lightingspeed_time = 0;
 
     public int killcount = 0;
 
@@ -97,6 +98,10 @@ public abstract class Player extends Circle {
             this.x_vel *= 1.3;
             this.y_vel *= 1.3;
         }
+        if (this.lightingspeed_time > 0) {
+            this.x_vel *= 1.5;
+            this.y_vel *= 1.5;
+        }
         if (this.stun_time > 0) {
             this.x_vel = 0;
             this.y_vel = 0;
@@ -148,6 +153,9 @@ public abstract class Player extends Circle {
         }
         if (frenzy_time > 0) {
             frenzy_time--;
+        }
+        if (lightingspeed_time > 0) {
+            lightingspeed_time--;
         }
     }
 

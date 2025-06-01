@@ -29,8 +29,8 @@ public class GameServer extends WebSocketServer {
      * constructs new server
      */
     public GameServer() {
-        super(new InetSocketAddress("0.0.0.0", getEnvPort()));
-        //super(new InetSocketAddress("localhost", 8080));
+        //super(new InetSocketAddress("0.0.0.0", getEnvPort()));
+        super(new InetSocketAddress("localhost", 8080));
         this.objectMapper = new ObjectMapper();
         this.players = new ConcurrentHashMap<>();
         this.projectiles = Collections.newSetFromMap(new ConcurrentHashMap<>());
@@ -66,7 +66,7 @@ public class GameServer extends WebSocketServer {
         int locy = (int)(Math.random()*4000);
         switch (gameClass) {
             case "fire":
-                player = new Fire(playerID, name, locx, locy);
+                player = new Lightning(playerID, name, locx, locy);
                 players.put(ws, player);
                 break;
             case "ice":
@@ -271,8 +271,8 @@ public class GameServer extends WebSocketServer {
                     players.remove(ws);
                     return;
                 }
-                //cluster fireball shit????
-                if (proj.type.equals("clusterfireball")) {
+                //some proj types end on impact
+                if (proj.type.equals("clusterfireball") || proj.type.equals("lightningball")) {
                     proj.time = 0;
                 }
             }
@@ -307,12 +307,22 @@ public class GameServer extends WebSocketServer {
 
     private void update() {
         for (WebSocket ws : players.keySet()) {
-            players.get(ws).update();
+            Player pl = players.get(ws);
+            pl.update();
+            if (pl.lightingspeed_time % 2 == 1) {
+                for (int i = 0; i < 3; i++) {
+                    double angle = 2*Math.PI*Math.random();
+                    projectiles.add(new LightningSpark(UUID.randomUUID().toString(), pl.x+40*Math.cos(angle), pl.y+40*Math.sin(angle), angle, pl));
+                }
+            }
             playerProjectileCollisions(ws);
             playerObstacleCollisions(ws);
         }
         for (Projectile p : projectiles) {
             projectileObstacleCollisions(p);
+            if (p.type.equals("lightningball")) {
+                ((LightningBall)p).computeHoming(players.values());
+            }
             p.update();
             if (p.time <= 0) {
                 //cluster shot case
@@ -353,6 +363,7 @@ public class GameServer extends WebSocketServer {
                     Map.entry("basicEnhanced", pl.basicEnhanced),
                     Map.entry("isInvincible", (pl.invincible_time>0)),
                     Map.entry("isFrenzy", (pl.frenzy_time>0)),
+                    Map.entry("isLightningSpeed", (pl.lightingspeed_time>0)),
                     Map.entry("isHitting", pl.isHitting),
                     //skill cooldowns
                     Map.entry("skill1cd", ((double)pl.skill1cd/pl.skill1maxcd)),
