@@ -94,7 +94,7 @@ public class GameServer extends WebSocketServer {
         ws.send(response.toString());
         broadcastObstacleData();
 
-        System.out.println("Player joined: " + name + " (" + playerID + ")");
+        System.out.println("Player joined: " + name + " (" + playerID + ")" + "at: " + java.time.LocalDate.now());
     }
 
     @Override
@@ -315,7 +315,7 @@ public class GameServer extends WebSocketServer {
             Player pl = players.get(ws);
             pl.update();
             if (pl.lightingspeed_time % 2 == 1) {
-                for (int i = 0; i < 3; i++) {
+                for (int i = 0; i < 4; i++) {
                     double angle = 2*Math.PI*Math.random();
                     projectiles.add(new LightningSpark(UUID.randomUUID().toString(), pl.x+40*Math.cos(angle), pl.y+40*Math.sin(angle), angle, pl));
                 }
