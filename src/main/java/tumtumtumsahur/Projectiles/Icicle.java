@@ -10,7 +10,7 @@ public class Icicle extends Projectile {
         this.time = 20;
         this.radius = 5.0;
         this.damage = 15.0;
-        this.slow = 0.75;
+        this.slow = 0.7;
         this.slow_time = 20;
         this.type = "icicle";
     }
