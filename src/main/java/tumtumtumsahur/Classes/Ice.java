@@ -38,7 +38,7 @@ public class Ice extends Player {
 
     //spinning blade
     public Set<Projectile>  skill_2 (double dir) {
-        double manacost = 50.0;
+        double manacost = 30.0;
         if (mana <= manacost || skill2cd > 0) {
             return null;
         }
