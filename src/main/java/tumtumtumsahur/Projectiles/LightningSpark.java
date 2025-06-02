@@ -9,7 +9,7 @@ public class LightningSpark extends Projectile {
         super(id, x_pos, y_pos, 60.0*Math.cos(dir), 60.0*Math.sin(dir), 60.0, pl);
         this.time = 5;
         this.radius = 5;
-        this.damage = 5.0;
+        this.damage = 10.0;
         this.stun_time = 3;
         this.type = "lightningspark";
     }
