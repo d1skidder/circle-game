@@ -11,7 +11,7 @@ public class IceBlade extends Projectile {
         this.radius = 50.0;
         this.damage = 20.0;
         this.slow = 0.2;
-        this.slow_time = 20;
+        this.slow_time = 10;
         this.type = "iceblade";
     }
 
