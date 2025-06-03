@@ -11,8 +11,8 @@ public class Blood extends Player {
 
     public Blood(String id, String name, double x, double y) {
         super(id,name, x, y);
-        mana_regen = 2.0;
-        health_regen = 1.0;
+        mana_regen = 1.0;
+        health_regen = 0.6;
         this.gameClass = "blood";
         
         this.skill1maxcd = 10;

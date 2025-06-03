@@ -13,9 +13,9 @@ public class Earth extends Player {
     public Earth(String id, String name, double x, double y) {
         super(id,name, x, y);
         mana_regen = 2.0;
-        health_regen = 0.8;
+        health_regen = 0.5;
         this.gameClass = "earth";
-        this.max_vel = 1.1;
+        this.max_vel = 33.0;
 
         this.skill1maxcd = 30;
         this.skill2maxcd = 50;
