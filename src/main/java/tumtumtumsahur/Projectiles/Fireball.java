@@ -11,7 +11,7 @@ public class Fireball extends Projectile {
         super(id, x_pos, y_pos, 80.0*Math.cos(dir), 80.0*Math.sin(dir), 80.0, pl);
         this.time = 20;
         this.radius = 8.0;
-        this.damage = 20.0;
+        this.damage = 25.0;
         this.type = "fireball";
     }
 

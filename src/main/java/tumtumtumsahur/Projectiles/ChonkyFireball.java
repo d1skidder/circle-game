@@ -10,7 +10,7 @@ public class ChonkyFireball extends Projectile {
         super(id, x_pos, y_pos, 70.0*Math.cos(dir), 70.0*Math.sin(dir), 70.0, pl);
         this.time = 20;
         this.radius = 20.0;
-        this.damage = 40.0;
+        this.damage = 50.0;
         this.type = "chonkyfireball";
     }
 

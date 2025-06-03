@@ -99,8 +99,8 @@ public abstract class Player extends Circle {
             this.y_vel *= 1.3;
         }
         if (this.lightingspeed_time > 0) {
-            this.x_vel *= 1.3;
-            this.y_vel *= 1.3;
+            this.x_vel *= 1.15;
+            this.y_vel *= 1.15;
         }
         if (this.stun_time > 0) {
             this.x_vel = 0;

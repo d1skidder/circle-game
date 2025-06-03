@@ -15,6 +15,7 @@ public class Earth extends Player {
         mana_regen = 2.0;
         health_regen = 0.8;
         this.gameClass = "earth";
+        this.max_vel = 1.1;
 
         this.skill1maxcd = 30;
         this.skill2maxcd = 50;

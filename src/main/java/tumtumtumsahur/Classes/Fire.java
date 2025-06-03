@@ -36,7 +36,7 @@ public class Fire extends Player {
 
     //larger fireball
     public Set<Projectile>  skill_2 (double dir) {
-        double manacost = 40.0;
+        double manacost = 30.0;
         if (mana <= manacost || skill2cd > 0) {
             return null;
         }
@@ -48,7 +48,7 @@ public class Fire extends Player {
 
     //big slow cluster fireball
     public Set<Projectile>  skill_3 (double dir) {
-        double manacost = 80.0;
+        double manacost = 50.0;
         if (mana <= manacost || skill3cd > 0) {
             return null;
         }

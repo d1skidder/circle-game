@@ -11,7 +11,7 @@ public class ClusterFireball extends Projectile{
         this.time = 8;
         this.radius = 30.0;
         this.damage = 50.0;
-        this.stun_time = 10;
+        this.stun_time = 20;
         this.type = "clusterfireball";
     }
 }
